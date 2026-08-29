@@ -1,0 +1,292 @@
+import { Train, TrainRoute, JourneyStatus, WeatherSnapshot, NearbyFeature, JourneyElevation } from '@/types';
+
+export const MOCK_TRAINS: Train[] = [
+  {
+    id: '12951',
+    number: '12951',
+    name: 'Mumbai Rajdhani Express',
+    originStationId: 'NDLS',
+    originName: 'New Delhi',
+    originCode: 'NDLS',
+    destinationStationId: 'MMCT',
+    destinationName: 'Mumbai Central',
+    destinationCode: 'MMCT',
+    totalDistanceKm: 1386,
+    durationHours: 15.5,
+  },
+  {
+    id: '12002',
+    number: '12002',
+    name: 'Bhopal Shatabdi Express',
+    originStationId: 'NDLS',
+    originName: 'New Delhi',
+    originCode: 'NDLS',
+    destinationStationId: 'RKMP',
+    destinationName: 'Rani Kamlapati (Bhopal)',
+    destinationCode: 'RKMP',
+    totalDistanceKm: 708,
+    durationHours: 8.5,
+  },
+  {
+    id: '22436',
+    number: '22436',
+    name: 'Vande Bharat Express',
+    originStationId: 'NDLS',
+    originName: 'New Delhi',
+    originCode: 'NDLS',
+    destinationStationId: 'BSB',
+    destinationName: 'Varanasi Junction',
+    destinationCode: 'BSB',
+    totalDistanceKm: 759,
+    durationHours: 8.0,
+  },
+  {
+    id: '12626',
+    number: '12626',
+    name: 'Kerala Express',
+    originStationId: 'NDLS',
+    originName: 'New Delhi',
+    originCode: 'NDLS',
+    destinationStationId: 'TVC',
+    destinationName: 'Thiruvananthapuram Central',
+    destinationCode: 'TVC',
+    totalDistanceKm: 3035,
+    durationHours: 48.0,
+  },
+  {
+    id: '12259',
+    number: '12259',
+    name: 'Sealdah Duronto Express',
+    originStationId: 'SDAH',
+    originName: 'Sealdah (Kolkata)',
+    originCode: 'SDAH',
+    destinationStationId: 'BKN',
+    destinationName: 'Bikaner Junction',
+    destinationCode: 'BKN',
+    totalDistanceKm: 1923,
+    durationHours: 26.0,
+  },
+];
+
+export const MOCK_ROUTES: Record<string, TrainRoute> = {
+  '12951': {
+    trainId: '12951',
+    totalDistanceKm: 1386,
+    stations: [
+      {
+        station: { id: 'NDLS', code: 'NDLS', name: 'New Delhi', latitude: 28.6139, longitude: 77.209, city: 'New Delhi', state: 'Delhi' },
+        sequence: 1,
+        distanceFromOriginKm: 0,
+        scheduledDeparture: '16:55',
+        actualDeparture: '16:55',
+        delayMinutes: 0,
+        status: 'PASSED',
+        platform: '16',
+        elevationMeters: 216,
+      },
+      {
+        station: { id: 'MTJ', code: 'MTJ', name: 'Mathura Junction', latitude: 27.4924, longitude: 77.6737, city: 'Mathura', state: 'Uttar Pradesh' },
+        sequence: 2,
+        distanceFromOriginKm: 141,
+        scheduledArrival: '18:53',
+        scheduledDeparture: '18:55',
+        actualArrival: '19:05',
+        actualDeparture: '19:07',
+        delayMinutes: 12,
+        status: 'PASSED',
+        platform: '2',
+        elevationMeters: 174,
+      },
+      {
+        station: { id: 'KOTA', code: 'KOTA', name: 'Kota Junction', latitude: 25.2138, longitude: 75.8648, city: 'Kota', state: 'Rajasthan' },
+        sequence: 3,
+        distanceFromOriginKm: 465,
+        scheduledArrival: '22:30',
+        scheduledDeparture: '22:40',
+        actualArrival: '22:48',
+        actualDeparture: '22:58',
+        delayMinutes: 18,
+        status: 'CURRENT',
+        platform: '1',
+        elevationMeters: 256,
+      },
+      {
+        station: { id: 'RTM', code: 'RTM', name: 'Ratlam Junction', latitude: 23.3343, longitude: 75.037, city: 'Ratlam', state: 'Madhya Pradesh' },
+        sequence: 4,
+        distanceFromOriginKm: 731,
+        scheduledArrival: '02:05',
+        scheduledDeparture: '02:10',
+        actualArrival: '02:23',
+        delayMinutes: 18,
+        status: 'UPCOMING',
+        platform: '4',
+        elevationMeters: 493,
+      },
+      {
+        station: { id: 'BRC', code: 'BRC', name: 'Vadodara Junction', latitude: 22.3072, longitude: 73.1812, city: 'Vadodara', state: 'Gujarat' },
+        sequence: 5,
+        distanceFromOriginKm: 992,
+        scheduledArrival: '05:48',
+        scheduledDeparture: '05:58',
+        delayMinutes: 15,
+        status: 'UPCOMING',
+        platform: '1',
+        elevationMeters: 36,
+      },
+      {
+        station: { id: 'ST', code: 'ST', name: 'Surat', latitude: 21.1702, longitude: 72.8311, city: 'Surat', state: 'Gujarat' },
+        sequence: 6,
+        distanceFromOriginKm: 1122,
+        scheduledArrival: '07:30',
+        scheduledDeparture: '07:35',
+        delayMinutes: 12,
+        status: 'UPCOMING',
+        platform: '2',
+        elevationMeters: 13,
+      },
+      {
+        station: { id: 'BVI', code: 'BVI', name: 'Borivali', latitude: 19.2288, longitude: 72.8541, city: 'Mumbai', state: 'Maharashtra' },
+        sequence: 7,
+        distanceFromOriginKm: 1356,
+        scheduledArrival: '10:03',
+        scheduledDeparture: '10:05',
+        delayMinutes: 10,
+        status: 'UPCOMING',
+        platform: '7',
+        elevationMeters: 14,
+      },
+      {
+        station: { id: 'MMCT', code: 'MMCT', name: 'Mumbai Central', latitude: 18.9696, longitude: 72.8193, city: 'Mumbai', state: 'Maharashtra' },
+        sequence: 8,
+        distanceFromOriginKm: 1386,
+        scheduledArrival: '10:45',
+        delayMinutes: 10,
+        status: 'UPCOMING',
+        platform: '1',
+        elevationMeters: 8,
+      },
+    ],
+    geometry: {
+      type: 'LineString',
+      coordinates: [
+        [77.209, 28.6139],
+        [77.6737, 27.4924],
+        [75.8648, 25.2138],
+        [75.037, 23.3343],
+        [73.1812, 22.3072],
+        [72.8311, 21.1702],
+        [72.8541, 19.2288],
+        [72.8193, 18.9696],
+      ],
+    },
+  },
+};
+
+export function getMockJourneyStatus(trainId: string): JourneyStatus {
+  const train = MOCK_TRAINS.find((t) => t.id === trainId) || MOCK_TRAINS[0];
+  const route = MOCK_ROUTES[train.id] || MOCK_ROUTES['12951'];
+
+  const currentStation = route.stations.find((s) => s.status === 'CURRENT') || route.stations[2];
+  const nextStation = route.stations.find((s) => s.status === 'UPCOMING') || route.stations[3];
+
+  const coveredKm = currentStation.distanceFromOriginKm;
+  const remainingKm = Math.max(0, train.totalDistanceKm - coveredKm);
+  const percentage = Math.round((coveredKm / train.totalDistanceKm) * 100);
+
+  return {
+    train,
+    state: 'DELAYED',
+    delayMinutes: 18,
+    currentStation,
+    nextStation,
+    location: {
+      lat: currentStation.station.latitude,
+      lng: currentStation.station.longitude,
+    },
+    headingAngle: 215,
+    speedKph: 110,
+    progress: {
+      percentage,
+      distanceCoveredKm: coveredKm,
+      distanceRemainingKm: remainingKm,
+    },
+    lastUpdated: new Date().toISOString(),
+  };
+}
+
+export const MOCK_WEATHER: Record<string, WeatherSnapshot> = {
+  current: {
+    temperatureC: 28,
+    humidityPercent: 64,
+    windSpeedKph: 14,
+    precipitationProbability: 15,
+    condition: 'Partly Cloudy',
+    conditionIcon: '⛅',
+    observedAt: new Date().toISOString(),
+    locationName: 'Kota Junction',
+  },
+  nextStation: {
+    temperatureC: 26,
+    humidityPercent: 70,
+    windSpeedKph: 11,
+    precipitationProbability: 30,
+    condition: 'Light Rain',
+    conditionIcon: '🌧️',
+    observedAt: new Date().toISOString(),
+    locationName: 'Ratlam Junction',
+  },
+  destination: {
+    temperatureC: 31,
+    humidityPercent: 78,
+    windSpeedKph: 18,
+    precipitationProbability: 40,
+    condition: 'Humid & Overcast',
+    conditionIcon: '☁️',
+    observedAt: new Date().toISOString(),
+    locationName: 'Mumbai Central',
+  },
+};
+
+export const MOCK_ELEVATION: JourneyElevation = {
+  highestElevationMeters: 493,
+  lowestElevationMeters: 8,
+  profile: [
+    { distanceKm: 0, elevationMeters: 216, stationName: 'New Delhi' },
+    { distanceKm: 141, elevationMeters: 174, stationName: 'Mathura' },
+    { distanceKm: 465, elevationMeters: 256, stationName: 'Kota' },
+    { distanceKm: 731, elevationMeters: 493, stationName: 'Ratlam' },
+    { distanceKm: 992, elevationMeters: 36, stationName: 'Vadodara' },
+    { distanceKm: 1122, elevationMeters: 13, stationName: 'Surat' },
+    { distanceKm: 1386, elevationMeters: 8, stationName: 'Mumbai Central' },
+  ],
+};
+
+export const MOCK_NEARBY_FEATURES: NearbyFeature[] = [
+  {
+    id: 'poi-1',
+    name: 'Chambal River Bridge',
+    category: 'RIVER',
+    distanceFromTrainKm: 3.8,
+    description: 'Passing over the picturesque Chambal River canyon, home to rare ghariyal crocodiles.',
+    latitude: 25.18,
+    longitude: 75.83,
+  },
+  {
+    id: 'poi-2',
+    name: 'Mukundra Hills & Tiger Reserve',
+    category: 'MOUNTAIN',
+    distanceFromTrainKm: 18.2,
+    description: 'Located in the Vindhyan plateau region with rich wildlife and ancient forts.',
+    latitude: 24.8,
+    longitude: 75.9,
+  },
+  {
+    id: 'poi-3',
+    name: 'Darrah Pass Rail Tunnel',
+    category: 'TUNNEL',
+    distanceFromTrainKm: 28.5,
+    description: 'Historical railway pass through the dense forests of Aravalli-Vindhya junction.',
+    latitude: 24.62,
+    longitude: 75.98,
+  },
+];
