@@ -52,7 +52,7 @@ export function AIAssistantDrawer() {
       content: currentTrainNumber
         ? `Hello! I'm your **RailGaadi AI Assistant**. I'm monitoring **Train ${currentTrainNumber}** in real time. How can I help with your journey today?`
         : `Hello! I'm your **RailGaadi AI Assistant**. Ask me about live train locations, delay predictions, weather forecasts, or journey planning.`,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      timestamp: 'Just now',
     },
   ]);
 
@@ -220,7 +220,9 @@ export function AIAssistantDrawer() {
                   </div>
                 )}
               </div>
-              <span className="text-[10px] text-slate-400 mt-1 px-1">{msg.timestamp}</span>
+              <span className="text-[10px] text-slate-400 mt-1 px-1" suppressHydrationWarning>
+                {msg.timestamp}
+              </span>
             </div>
           ))}
 

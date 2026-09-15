@@ -54,7 +54,7 @@ export function SharedJourneyClient({ token }: { token: string }) {
           <ShieldCheck className="w-4 h-4 text-indigo-600" />
           <span>Shared Live Train Tracking View</span>
         </div>
-        <span className="text-[10px] text-indigo-500 font-mono">
+        <span className="text-[10px] text-indigo-500 font-mono" suppressHydrationWarning>
           Updated {new Date(status.lastUpdated).toLocaleTimeString()}
         </span>
       </div>
