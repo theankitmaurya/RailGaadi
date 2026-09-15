@@ -59,13 +59,31 @@ export class RailRadarProvider implements ITrainProvider {
     }
 
     try {
-      const res = await fetch(`${this.baseUrl}/trains/${trainId}/live`, {
-        headers: this.getHeaders(),
-      });
-      if (!res.ok) throw new Error(`RailRadar live HTTP error: ${res.status}`);
-      const json = await res.json();
+      const [liveRes, routeRes] = await Promise.all([
+        fetch(`${this.baseUrl}/trains/${trainId}/live`, { headers: this.getHeaders() }),
+        fetch(`${this.baseUrl}/trains/${trainId}/route?format=geojson&stops=true`, { headers: this.getHeaders() }).catch(() => null),
+      ]);
+
+      if (!liveRes.ok) throw new Error(`RailRadar live HTTP error: ${liveRes.status}`);
+      const json = await liveRes.json();
       if (!json.success || !json.data) {
         return this.fallbackProvider.getJourneyStatus(trainId);
+      }
+
+      // Extract station coordinates map from route stops if available
+      const coordsMap = new Map<string, { lat: number; lng: number }>();
+      if (routeRes && routeRes.ok) {
+        try {
+          const routeJson = await routeRes.json();
+          const stops = routeJson.data?.stops || [];
+          for (const s of stops) {
+            if (s.code && typeof s.lat === 'number' && typeof s.lng === 'number') {
+              coordsMap.set(s.code, { lat: s.lat, lng: s.lng });
+            }
+          }
+        } catch {
+          // ignore route json error
+        }
       }
 
       const data = json.data;
@@ -83,30 +101,41 @@ export class RailRadarProvider implements ITrainProvider {
       const totalDistance = routeStops[routeStops.length - 1]?.distance || data.train?.distance || 1000;
       const coveredKm = data.currentLocation?.distanceFromOriginKm ?? (currentStop?.distance || 0);
 
-      const mapStopToRouteStation = (s: any, isCurrent = false): RouteStation => ({
-        station: {
-          id: s.stationCode || s.code,
-          code: s.stationCode || s.code,
-          name: s.stationName || s.name || s.stationCode,
-          latitude: s.lat || 0,
-          longitude: s.lng || 0,
-        },
-        sequence: s.sequence || 1,
-        scheduledArrival: s.scheduledArrival,
-        scheduledDeparture: s.scheduledDeparture,
-        actualArrival: s.actualArrival,
-        actualDeparture: s.actualDeparture,
-        delayMinutes: s.delayArrival || s.delayDeparture || 0,
-        status: isCurrent
-          ? 'CURRENT'
-          : s.status === 'departed'
-          ? 'PASSED'
-          : s.status === 'at-station'
-          ? 'CURRENT'
-          : 'UPCOMING',
-        platform: s.platform,
-        distanceFromOriginKm: s.distance || 0,
-      });
+      const mapStopToRouteStation = (s: any, isCurrent = false): RouteStation => {
+        const code = s.stationCode || s.code;
+        const coords = coordsMap.get(code);
+        return {
+          station: {
+            id: code,
+            code: code,
+            name: s.stationName || s.name || code,
+            latitude: coords?.lat || s.lat || 0,
+            longitude: coords?.lng || s.lng || 0,
+          },
+          sequence: s.sequence || 1,
+          scheduledArrival: s.scheduledArrival,
+          scheduledDeparture: s.scheduledDeparture,
+          actualArrival: s.actualArrival,
+          actualDeparture: s.actualDeparture,
+          delayMinutes: s.delayArrival || s.delayDeparture || 0,
+          status: isCurrent
+            ? 'CURRENT'
+            : s.status === 'departed'
+            ? 'PASSED'
+            : s.status === 'at-station'
+            ? 'CURRENT'
+            : 'UPCOMING',
+          platform: s.platform,
+          distanceFromOriginKm: s.distance || 0,
+        };
+      };
+
+      const currCoords = coordsMap.get(currentStop?.stationCode || currentStop?.code || '');
+      const location = data.currentLocation?.coordinates
+        ? { lat: data.currentLocation.coordinates.lat, lng: data.currentLocation.coordinates.lng }
+        : currCoords
+        ? { lat: currCoords.lat, lng: currCoords.lng }
+        : undefined;
 
       return {
         train: {
@@ -130,9 +159,7 @@ export class RailRadarProvider implements ITrainProvider {
         delayMinutes: data.delayMinutes || 0,
         speedKph: data.currentLocation?.speedKmh || 0,
         lastUpdated: data.lastUpdatedAt || new Date().toISOString(),
-        location: data.currentLocation?.coordinates
-          ? { lat: data.currentLocation.coordinates.lat, lng: data.currentLocation.coordinates.lng }
-          : undefined,
+        location,
         progress: {
           distanceCoveredKm: coveredKm,
           distanceRemainingKm: Math.max(0, totalDistance - coveredKm),
@@ -162,6 +189,8 @@ export class RailRadarProvider implements ITrainProvider {
       const mockRoute = await this.fallbackProvider.getRoute(trainId);
 
       let coordinates: [number, number][] = [];
+      const coordsMap = new Map<string, { lat: number; lng: number }>();
+
       if (routeRes.ok) {
         const routeJson = await routeRes.json();
         if (routeJson.success && routeJson.data) {
@@ -169,6 +198,15 @@ export class RailRadarProvider implements ITrainProvider {
             coordinates = routeJson.data.geojson.geometry.coordinates;
           } else if (Array.isArray(routeJson.data.coordinates)) {
             coordinates = routeJson.data.coordinates;
+          }
+
+          // Populate coordinates for every station from route stops
+          if (Array.isArray(routeJson.data.stops)) {
+            for (const st of routeJson.data.stops) {
+              if (st.code && typeof st.lat === 'number' && typeof st.lng === 'number') {
+                coordsMap.set(st.code, { lat: st.lat, lng: st.lng });
+              }
+            }
           }
         }
       }
@@ -191,13 +229,16 @@ export class RailRadarProvider implements ITrainProvider {
               stationStatus = 'PASSED';
             }
 
+            const code = s.stationCode || s.code;
+            const coords = coordsMap.get(code);
+
             return {
               station: {
-                id: s.stationCode || s.code,
-                code: s.stationCode || s.code,
-                name: s.stationName || s.name || s.stationCode,
-                latitude: s.lat || 0,
-                longitude: s.lng || 0,
+                id: code,
+                code: code,
+                name: s.stationName || s.name || code,
+                latitude: coords?.lat || s.lat || 0,
+                longitude: coords?.lng || s.lng || 0,
               },
               sequence: s.sequence || idx + 1,
               scheduledArrival: s.scheduledArrival,
