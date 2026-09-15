@@ -78,8 +78,8 @@ export function WeatherCard({ weather }: WeatherCardProps) {
           <div className="mt-4 pt-4 border-t border-slate-100 dark:border-slate-800/80">
             <div className="label-section mb-2">Along Route</div>
             <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1">
-              {weather.routeForecast.map((f) => (
-                <div key={f.stationName} className="flex-shrink-0 flex flex-col items-center gap-1 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60 px-3 py-2 min-w-[72px] shadow-xs">
+              {weather.routeForecast.map((f, idx) => (
+                <div key={`${f.stationName}-${idx}`} className="flex-shrink-0 flex flex-col items-center gap-1 rounded-xl bg-white dark:bg-slate-800/80 border border-slate-100 dark:border-slate-700/60 px-3 py-2 min-w-[72px] shadow-xs">
                   <span className="text-lg leading-none">{f.conditionIcon}</span>
                   <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{f.temperatureC}°</span>
                   <span className="text-[10px] text-slate-400 dark:text-slate-500 text-center leading-tight truncate max-w-[60px]">{f.stationName}</span>

@@ -35,7 +35,7 @@ export function StationTimeline({ stations }: StationTimelineProps) {
 
           return (
             <div
-              key={s.station.id}
+              key={`${s.station.id || s.station.code || 'stn'}-${s.sequence ?? idx}-${idx}`}
               className={`relative flex items-start gap-3 px-5 py-3.5 transition-colors ${
                 isCurrent ? 'bg-indigo-50/60 dark:bg-indigo-950/40' : ''
               }`}

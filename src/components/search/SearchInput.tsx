@@ -218,9 +218,9 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
                 <span>Trains</span>
                 <span>{trainResults.length} match{trainResults.length !== 1 ? 'es' : ''}</span>
               </div>
-              {trainResults.map((train) => (
+              {trainResults.map((train, idx) => (
                 <div
-                  key={train.id}
+                  key={`${train.id}-${idx}`}
                   onClick={() => handleSelectTrain(train)}
                   className="flex items-center gap-3 sm:gap-3.5 rounded-xl p-2.5 sm:p-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors group cursor-pointer"
                 >
@@ -260,9 +260,9 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
                 <span>Stations (Live Boards)</span>
                 <span>{stationResults.length} found</span>
               </div>
-              {stationResults.slice(0, 5).map((stn) => (
+              {stationResults.slice(0, 5).map((stn, idx) => (
                 <div
-                  key={stn.code}
+                  key={`${stn.code}-${idx}`}
                   onClick={() => handleSelectStation(stn.code)}
                   className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors group cursor-pointer"
                 >
