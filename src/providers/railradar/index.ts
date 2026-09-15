@@ -71,9 +71,14 @@ export class RailRadarProvider implements ITrainProvider {
       const data = json.data;
       const routeStops = data.route || [];
 
-      const currentStop = routeStops.find((s: any) => s.status === 'at-station' || s.status === 'CURRENT')
-        || routeStops.filter((s: any) => s.status === 'departed').pop();
-      const nextStop = routeStops.find((s: any) => s.status === 'upcoming' && (s.isHalt ?? true));
+      const currentStopIndex = routeStops.findIndex((s: any) => s.status === 'at-station' || s.status === 'CURRENT');
+      const lastDepartedIndex = routeStops.reduce((acc: number, s: any, idx: number) => s.status === 'departed' ? idx : acc, -1);
+
+      const currentStop = currentStopIndex !== -1 
+        ? routeStops[currentStopIndex] 
+        : (lastDepartedIndex !== -1 ? routeStops[lastDepartedIndex] : routeStops[0]);
+      
+      const nextStop = routeStops.find((s: any, idx: number) => idx > (currentStopIndex !== -1 ? currentStopIndex : lastDepartedIndex) && (s.isHalt ?? true));
 
       const totalDistance = routeStops[routeStops.length - 1]?.distance || data.train?.distance || 1000;
       const coveredKm = data.currentLocation?.distanceFromOriginKm ?? (currentStop?.distance || 0);
@@ -148,44 +153,67 @@ export class RailRadarProvider implements ITrainProvider {
     }
 
     try {
-      const res = await fetch(`${this.baseUrl}/trains/${trainId}/route?format=geojson&stops=true`, {
-        headers: this.getHeaders(),
-      });
-      if (!res.ok) throw new Error(`RailRadar route HTTP error: ${res.status}`);
-      const json = await res.json();
-      if (!json.success || !json.data) {
-        return this.fallbackProvider.getRoute(trainId);
-      }
+      // 1. Fetch GeoJSON route geometry and live telemetry stops in parallel
+      const [routeRes, liveRes] = await Promise.all([
+        fetch(`${this.baseUrl}/trains/${trainId}/route?format=geojson&stops=true`, { headers: this.getHeaders() }),
+        fetch(`${this.baseUrl}/trains/${trainId}/live`, { headers: this.getHeaders() }),
+      ]);
 
-      const data = json.data;
       const mockRoute = await this.fallbackProvider.getRoute(trainId);
 
-      // Extract coordinates array for GeoJSON LineString
       let coordinates: [number, number][] = [];
-      if (data.geojson?.geometry?.coordinates) {
-        coordinates = data.geojson.geometry.coordinates;
-      } else if (Array.isArray(data.coordinates)) {
-        coordinates = data.coordinates;
+      if (routeRes.ok) {
+        const routeJson = await routeRes.json();
+        if (routeJson.success && routeJson.data) {
+          if (routeJson.data.geojson?.geometry?.coordinates) {
+            coordinates = routeJson.data.geojson.geometry.coordinates;
+          } else if (Array.isArray(routeJson.data.coordinates)) {
+            coordinates = routeJson.data.coordinates;
+          }
+        }
       }
 
       let stations: RouteStation[] = [];
-      if (Array.isArray(data.stops) && data.stops.length > 0) {
-        stations = data.stops.map((s: any) => ({
-          station: {
-            id: s.code || s.stationCode,
-            code: s.code || s.stationCode,
-            name: s.name || s.stationName || s.code,
-            latitude: s.lat || 0,
-            longitude: s.lng || 0,
-          },
-          sequence: s.sequence || 1,
-          scheduledArrival: s.scheduledArrival,
-          scheduledDeparture: s.scheduledDeparture,
-          delayMinutes: 0,
-          status: 'UPCOMING',
-          distanceFromOriginKm: s.distance || 0,
-        }));
-      } else {
+
+      // 2. Parse live route stops from live telemetry endpoint (contains exact timestamps, delays, distance in km, & statuses!)
+      if (liveRes.ok) {
+        const liveJson = await liveRes.json();
+        if (liveJson.success && Array.isArray(liveJson.data?.route) && liveJson.data.route.length > 0) {
+          const routeStops = liveJson.data.route;
+          const currentStopIndex = routeStops.findIndex((s: any) => s.status === 'at-station');
+          const lastDepartedIndex = routeStops.reduce((acc: number, s: any, idx: number) => s.status === 'departed' ? idx : acc, -1);
+
+          stations = routeStops.map((s: any, idx: number) => {
+            let stationStatus: 'PASSED' | 'CURRENT' | 'UPCOMING' = 'UPCOMING';
+            if (s.status === 'at-station' || (currentStopIndex === -1 && idx === lastDepartedIndex)) {
+              stationStatus = 'CURRENT';
+            } else if (s.status === 'departed' || idx < lastDepartedIndex) {
+              stationStatus = 'PASSED';
+            }
+
+            return {
+              station: {
+                id: s.stationCode || s.code,
+                code: s.stationCode || s.code,
+                name: s.stationName || s.name || s.stationCode,
+                latitude: s.lat || 0,
+                longitude: s.lng || 0,
+              },
+              sequence: s.sequence || idx + 1,
+              scheduledArrival: s.scheduledArrival,
+              scheduledDeparture: s.scheduledDeparture,
+              actualArrival: s.actualArrival,
+              actualDeparture: s.actualDeparture,
+              delayMinutes: s.delayArrival || s.delayDeparture || 0,
+              status: stationStatus,
+              platform: s.platform,
+              distanceFromOriginKm: s.distance ?? (s.distanceFromOriginKm || 0),
+            };
+          });
+        }
+      }
+
+      if (stations.length === 0) {
         stations = mockRoute.stations;
       }
 
@@ -197,7 +225,7 @@ export class RailRadarProvider implements ITrainProvider {
           type: 'LineString',
           coordinates: coordinates.length > 0 ? coordinates : mockRoute.geometry.coordinates,
         },
-        stations: stations.length > 0 ? stations : mockRoute.stations,
+        stations: stations,
         totalDistanceKm: totalDistance,
       };
     } catch (err) {

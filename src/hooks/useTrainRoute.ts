@@ -12,6 +12,6 @@ export function useTrainRoute(trainId: string) {
       const json = await res.json();
       return json.data;
     },
-    staleTime: 1000 * 60 * 60, // 1 hour stale time for route geometry
+    staleTime: 1000 * 15, // 15 seconds stale time for live route telemetry
   });
 }

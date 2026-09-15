@@ -66,19 +66,37 @@ export function formatDistance(km: number): string {
 }
 
 export function formatTime(timeStr?: string): string {
-  if (!timeStr) return '--:--';
-  if (timeStr.length === 5 && timeStr.includes(':')) return timeStr;
+  if (!timeStr || timeStr === '--:--') return '--:--';
+
+  // Handles HH:MM format
+  if (/^\d{1,2}:\d{2}$/.test(timeStr)) {
+    const [h, m] = timeStr.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const hour12 = h % 12 || 12;
+    return `${hour12.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${ampm}`;
+  }
+
+  // Handles HH:MM:SS format
+  if (/^\d{1,2}:\d{2}:\d{2}$/.test(timeStr)) {
+    const [h, m] = timeStr.split(':').map(Number);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    const hour12 = h % 12 || 12;
+    return `${hour12.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')} ${ampm}`;
+  }
+
+  // Handles ISO date strings
   try {
     const date = new Date(timeStr);
     if (!isNaN(date.getTime())) {
-      return date.toLocaleTimeString('en-IN', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-      });
+      let hours = date.getHours();
+      const minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12 || 12;
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')} ${ampm}`;
     }
   } catch {
     // fallback
   }
+
   return timeStr;
 }

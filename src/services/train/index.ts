@@ -10,7 +10,7 @@ export class TrainService {
 
     const cacheKey = `search:${q}`;
     const cached = getCached<Train[]>(cacheKey);
-    if (cached) return cached;
+    if (cached && cached.length > 0) return cached;
 
     const results = await trainProvider.searchTrains(q);
     setCache(cacheKey, results, CONFIG.cacheTTLs.trainSearchSec);
@@ -23,18 +23,24 @@ export class TrainService {
     if (cached) return cached;
 
     const status = await trainProvider.getJourneyStatus(trainId);
-    // Short TTL cache for live status (30s)
-    setCache(cacheKey, status, 30);
+    // Short 15s cache for live position & telemetry updates
+    setCache(cacheKey, status, 15);
     return status;
   }
 
   static async getRoute(trainId: string): Promise<TrainRoute> {
     const cacheKey = `route:${trainId}`;
     const cached = getCached<TrainRoute>(cacheKey);
-    if (cached) return cached;
+    
+    // Only return cached route if it contains valid live station telemetry (distance > 0 or arrival time present)
+    if (cached && cached.stations?.some((s) => s.distanceFromOriginKm > 0 || !!s.scheduledArrival)) {
+      return cached;
+    }
 
     const route = await trainProvider.getRoute(trainId);
-    setCache(cacheKey, route, CONFIG.cacheTTLs.routeSec);
+    if (route && route.stations?.some((s) => s.distanceFromOriginKm > 0 || !!s.scheduledArrival)) {
+      setCache(cacheKey, route, 30); // 30s TTL for live route telemetry updates
+    }
     return route;
   }
 }

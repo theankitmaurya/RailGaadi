@@ -1,54 +1,49 @@
-// Dark tile style – CartoDB Dark Matter (no API key needed)
-// Bright electric-cyan completed route, muted grey remaining route
+const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY || 'j8D5JpK5enH8AyhkYfom';
+
+// MapTiler Dataviz Dark (Official clean dark tiles with MapTiler API Key - 0 watermarks)
 export const DARK_MAP_STYLE = {
   version: 8 as const,
   sources: {
-    'carto-dark': {
+    'maptiler-dark': {
       type: 'raster' as const,
       tiles: [
-        'https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        'https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        'https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
-        'https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png',
+        `https://api.maptiler.com/maps/dataviz-dark/{z}/{x}/{y}@2x.png?key=${MAPTILER_KEY}`,
       ],
       tileSize: 256,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxzoom: 19,
     },
   },
   layers: [
     {
-      id: 'carto-dark-layer',
+      id: 'maptiler-dark-layer',
       type: 'raster' as const,
-      source: 'carto-dark',
+      source: 'maptiler-dark',
       minzoom: 0,
       maxzoom: 19,
     },
   ],
 };
 
-// Light tile style – CartoDB Positron (clean light for light mode)
+// MapTiler Dataviz Light (Official clean light tiles for light mode - 0 watermarks)
 export const LIGHT_MAP_STYLE = {
   version: 8 as const,
   sources: {
-    'carto-light': {
+    'maptiler-light': {
       type: 'raster' as const,
       tiles: [
-        'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-        'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-        'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
-        'https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png',
+        `https://api.maptiler.com/maps/dataviz-light/{z}/{x}/{y}@2x.png?key=${MAPTILER_KEY}`,
       ],
       tileSize: 256,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+      attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxzoom: 19,
     },
   },
   layers: [
     {
-      id: 'carto-light-layer',
+      id: 'maptiler-light-layer',
       type: 'raster' as const,
-      source: 'carto-light',
+      source: 'maptiler-light',
       minzoom: 0,
       maxzoom: 19,
     },
@@ -72,7 +67,7 @@ export const CONFIG = {
     poiSec: 86400,
   },
   map: {
-    maptilerKey: process.env.NEXT_PUBLIC_MAPTILER_KEY || '',
+    maptilerKey: MAPTILER_KEY,
     styleUrl: DARK_MAP_STYLE,
     defaultCenter: [78.9629, 20.5937] as [number, number],
     defaultZoom: 5,
