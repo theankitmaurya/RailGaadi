@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { PlannerOption } from '@/types';
@@ -18,14 +18,30 @@ import {
   Sparkles,
   Wifi,
   Search,
+  Check,
 } from 'lucide-react';
 
 const POPULAR_ROUTES = [
-  { from: 'NDLS', to: 'MMCT', label: 'Delhi → Mumbai' },
   { from: 'NDLS', to: 'AGC', label: 'Delhi → Agra' },
+  { from: 'NDLS', to: 'MMCT', label: 'Delhi → Mumbai' },
   { from: 'NDLS', to: 'LKO', label: 'Delhi → Lucknow' },
   { from: 'NDLS', to: 'BSB', label: 'Delhi → Varanasi' },
   { from: 'MMCT', to: 'ADI', label: 'Mumbai → Ahmedabad' },
+  { from: 'NDLS', to: 'CNB', label: 'Delhi → Kanpur' },
+];
+
+const SUGGESTED_STATIONS = [
+  { code: 'NDLS', name: 'New Delhi' },
+  { code: 'MMCT', name: 'Mumbai Central' },
+  { code: 'AGC', name: 'Agra Cantt' },
+  { code: 'LKO', name: 'Lucknow Charbagh' },
+  { code: 'CNB', name: 'Kanpur Central' },
+  { code: 'BSB', name: 'Varanasi Jn' },
+  { code: 'BPL', name: 'Bhopal Jn' },
+  { code: 'HWH', name: 'Howrah (Kolkata)' },
+  { code: 'ADI', name: 'Ahmedabad Jn' },
+  { code: 'MAS', name: 'Chennai Central' },
+  { code: 'JP', name: 'Jaipur' },
 ];
 
 export default function JourneyPlannerPage() {
@@ -53,16 +69,17 @@ function JourneyPlannerContent() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const fetchTrains = async () => {
-    if (!fromCode.trim() || !toCode.trim()) return;
+  const fetchTrains = useCallback(async (overrideFrom?: string, overrideTo?: string) => {
+    const f = (overrideFrom || fromCode).trim();
+    const t = (overrideTo || toCode).trim();
+    if (!f || !t) return;
+
     setIsLoading(true);
     setHasSearched(true);
 
     try {
       const res = await fetch(
-        `/api/journeys/plan?from=${encodeURIComponent(fromCode.trim())}&to=${encodeURIComponent(
-          toCode.trim()
-        )}&date=${date}&preference=${preference}`
+        `/api/journeys/plan?from=${encodeURIComponent(f)}&to=${encodeURIComponent(t)}&date=${date}&preference=${preference}`
       );
       const json = await res.json();
       if (json.success && Array.isArray(json.data)) {
@@ -76,22 +93,23 @@ function JourneyPlannerContent() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [fromCode, toCode, date, preference]);
 
   useEffect(() => {
     fetchTrains();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [preference]);
+  }, [fetchTrains]);
 
   const handleSwap = () => {
     const temp = fromCode;
     setFromCode(toCode);
     setToCode(temp);
+    fetchTrains(toCode, temp);
   };
 
   const handleQuickRoute = (from: string, to: string) => {
     setFromCode(from);
     setToCode(to);
+    fetchTrains(from, to);
   };
 
   return (
@@ -108,7 +126,7 @@ function JourneyPlannerContent() {
                 AI Journey Planner
               </h1>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
-                Find trains between two stations ranked by reliability score and delay risk.
+                Find trains between two stations ranked by punctuality score and delay risk.
               </p>
             </div>
           </div>
@@ -119,14 +137,14 @@ function JourneyPlannerContent() {
               {/* From Station */}
               <div className="md:col-span-4">
                 <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                  Origin Station
+                  Origin Station / City
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. NDLS (New Delhi)"
+                  placeholder="e.g. NDLS or Delhi"
                   value={fromCode}
-                  onChange={(e) => setFromCode(e.target.value.toUpperCase())}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-mono font-bold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
+                  onChange={(e) => setFromCode(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
 
@@ -145,21 +163,21 @@ function JourneyPlannerContent() {
               {/* To Station */}
               <div className="md:col-span-4">
                 <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
-                  Destination Station
+                  Destination Station / City
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. AGC (Agra Cantt)"
+                  placeholder="e.g. AGC or Agra"
                   value={toCode}
-                  onChange={(e) => setToCode(e.target.value.toUpperCase())}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-mono font-bold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
+                  onChange={(e) => setToCode(e.target.value)}
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
 
               {/* Search Submit */}
               <div className="md:col-span-3">
                 <Button
-                  onClick={fetchTrains}
+                  onClick={() => fetchTrains()}
                   disabled={isLoading}
                   className="w-full py-2.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
                 >
@@ -180,13 +198,14 @@ function JourneyPlannerContent() {
 
             {/* Popular Route Chips */}
             <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center gap-2 flex-wrap">
-              <span className="text-[11px] font-semibold text-slate-400">Popular:</span>
+              <span className="text-[11px] font-semibold text-slate-400">Popular Routes:</span>
               {POPULAR_ROUTES.map((route) => (
                 <button
                   key={`${route.from}-${route.to}`}
                   onClick={() => handleQuickRoute(route.from, route.to)}
                   className={`text-xs px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
-                    fromCode === route.from && toCode === route.to
+                    (fromCode === route.from || fromCode.toLowerCase() === route.label.split('→')[0].trim().toLowerCase()) &&
+                    (toCode === route.to || toCode.toLowerCase() === route.label.split('→')[1].trim().toLowerCase())
                       ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-bold'
                       : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 text-slate-600 dark:text-slate-400'
                   }`}
@@ -211,7 +230,7 @@ function JourneyPlannerContent() {
               </span>
             </h2>
             <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-              Ranked dynamically by travel duration, punctuality records, and delay confidence.
+              Ranked dynamically by travel duration, punctuality records, and delay risk.
             </p>
           </div>
 
@@ -274,8 +293,8 @@ function JourneyPlannerContent() {
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
               {hasSearched
-                ? `No scheduled direct trains found between ${fromCode} and ${toCode}. Try checking nearby junction stations.`
-                : 'Enter source and destination station codes above to discover trains ranked by punctuality and travel duration.'}
+                ? `No scheduled direct trains found between "${fromCode}" and "${toCode}". Try checking nearby junction stations.`
+                : 'Enter source and destination station codes or city names above to discover trains ranked by punctuality.'}
             </p>
           </Card>
         ) : (

@@ -8,13 +8,54 @@ export interface PlanQueryParams {
   preference?: 'reliable' | 'fastest' | 'lowest_delay' | 'earliest';
 }
 
+const COMMON_CITY_TO_CODE: Record<string, string> = {
+  'NEW DELHI': 'NDLS',
+  'DELHI': 'NDLS',
+  'MUMBAI': 'MMCT',
+  'MUMBAI CENTRAL': 'MMCT',
+  'MUMBAI CSMT': 'CSMT',
+  'AGRA': 'AGC',
+  'AGRA CANTT': 'AGC',
+  'LUCKNOW': 'LKO',
+  'KANPUR': 'CNB',
+  'VARANASI': 'BSB',
+  'BHOPAL': 'BPL',
+  'HOWRAH': 'HWH',
+  'KOLKATA': 'HWH',
+  'AHMEDABAD': 'ADI',
+  'CHENNAI': 'MAS',
+  'PUNE': 'PUNE',
+  'JAIPUR': 'JP',
+  'CHANDIGARH': 'CDG',
+  'AMRITSAR': 'ASR',
+  'PATNA': 'PNBE',
+};
+
+function resolveStationCode(input: string): string {
+  const cleaned = input.trim().toUpperCase();
+  if (COMMON_CITY_TO_CODE[cleaned]) {
+    return COMMON_CITY_TO_CODE[cleaned];
+  }
+  // If user typed e.g. "NDLS (New Delhi)", extract "NDLS"
+  const bracketMatch = cleaned.match(/^([A-Z0-9]{2,6})\b/);
+  if (bracketMatch) {
+    return bracketMatch[1];
+  }
+  return cleaned;
+}
+
 export class PlannerService {
-  private static apiKey = process.env.RAILRADAR_API_KEY || '';
   private static baseUrl = 'https://api.railradar.in/v1';
 
+  private static getApiKey(): string {
+    return process.env.RAILRADAR_API_KEY || '';
+  }
+
   static async findTrainsBetween(params: PlanQueryParams): Promise<PlannerOption[]> {
-    const from = params.from.trim().toUpperCase();
-    const to = params.to.trim().toUpperCase();
+    const rawFrom = params.from.trim();
+    const rawTo = params.to.trim();
+    const from = resolveStationCode(rawFrom);
+    const to = resolveStationCode(rawTo);
     const preference = params.preference || 'reliable';
 
     if (!from || !to) return [];
@@ -26,20 +67,28 @@ export class PlannerService {
     }
 
     try {
+      const apiKey = this.getApiKey();
       const url = `${this.baseUrl}/trains/between/${from}/${to}${params.date ? `?date=${params.date}` : ''}`;
       const res = await fetch(url, {
         headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'x-api-key': this.apiKey,
+          'Authorization': `Bearer ${apiKey}`,
+          'x-api-key': apiKey,
         },
       });
 
       if (!res.ok) {
-        throw new Error(`RailRadar trains between error: ${res.status}`);
+        console.warn(`RailRadar trains between HTTP ${res.status} for ${from} -> ${to}`);
+        return [];
       }
 
       const json = await res.json();
-      const rawTrains = Array.isArray(json.data) ? json.data : [];
+      
+      // RailRadar returns { success: true, data: { trains: [...], count: 31 } }
+      const rawTrains = Array.isArray(json.data?.trains)
+        ? json.data.trains
+        : Array.isArray(json.data)
+        ? json.data
+        : [];
 
       const options: PlannerOption[] = rawTrains.map((item: any) => {
         const trainNum = item.train?.number || item.trainNumber || '';
@@ -102,8 +151,10 @@ export class PlannerService {
         };
       });
 
-      // Cache raw for 10 minutes
-      setCache(cacheKey, options, 600);
+      // Cache for 10 minutes
+      if (options.length > 0) {
+        setCache(cacheKey, options, 600);
+      }
       return this.sortOptions(options, preference);
     } catch (err) {
       console.warn('PlannerService error, returning fallback:', err);
