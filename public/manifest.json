@@ -1,0 +1,17 @@
+{
+  "name": "RailGaadi — AI Railway Tracking & Intelligence",
+  "short_name": "RailGaadi",
+  "description": "Real-time train tracking, interactive map visualization, route analytics, and AI travel companion for Indian Railways.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090c15",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

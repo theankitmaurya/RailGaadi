@@ -5,6 +5,7 @@ import { JourneyStatus } from '@/types';
 import { StatusBadge } from './StatusBadge';
 import { Star, Share2, ArrowRight, Gauge } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { PushNotificationBell } from '@/components/notifications/PushNotificationBell';
 
 interface TrainHeaderProps {
   status: JourneyStatus;
@@ -67,6 +68,9 @@ export function TrainHeader({ status, isFavourite = false, onToggleFavourite, on
               <span>{status.speedKph} km/h</span>
             </div>
           )}
+
+          {/* Web Push Notification Bell */}
+          <PushNotificationBell trainNumber={train.number} trainName={train.name} />
 
           {onShare && (
             <Button variant="outline" size="sm" onClick={onShare} className="rounded-xl gap-1.5 ml-auto sm:ml-0">

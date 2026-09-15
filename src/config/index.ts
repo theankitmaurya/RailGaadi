@@ -1,4 +1,4 @@
-const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY || 'j8D5JpK5enH8AyhkYfom';
+const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY || '';
 
 // MapTiler Dataviz Dark (Official clean dark tiles with MapTiler API Key - 0 watermarks)
 export const DARK_MAP_STYLE = {

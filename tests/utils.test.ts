@@ -20,8 +20,9 @@ describe('Utility Functions', () => {
     expect(formatDistance(1386)).toBe('1,386 km');
   });
 
-  it('formats time string safely', () => {
-    expect(formatTime('16:55')).toBe('16:55');
+  it('formats time string safely to 12-hour format', () => {
+    expect(formatTime('16:55')).toBe('04:55 PM');
+    expect(formatTime('09:30')).toBe('09:30 AM');
   });
 });
 

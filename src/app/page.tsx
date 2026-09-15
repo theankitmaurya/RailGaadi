@@ -4,11 +4,22 @@ import React from 'react';
 import { SearchInput } from '@/components/search/SearchInput';
 import { RecentSearches } from '@/components/search/RecentSearches';
 import { FavouriteTrains } from '@/components/search/FavouriteTrains';
+import { FavouriteStations } from '@/components/search/FavouriteStations';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Train } from '@/types';
 import { MOCK_TRAINS } from '@/providers/mock/trainData';
 import Link from 'next/link';
-import { ArrowRight, Zap, MapPin, TrendingUp, Wifi, Star } from 'lucide-react';
+import {
+  ArrowRight,
+  Zap,
+  MapPin,
+  TrendingUp,
+  Wifi,
+  Star,
+  Compass,
+  Sparkles,
+  Bot,
+} from 'lucide-react';
 
 const STATS = [
   { label: 'Live Trains', value: '8,000+', icon: Zap },
@@ -56,7 +67,7 @@ export default function HomePage() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500" />
             </span>
-            Real-time Railway Intelligence for India
+            AI-Powered Railway Tracking & Journey Intelligence
           </div>
 
           {/* Headline */}
@@ -68,12 +79,30 @@ export default function HomePage() {
 
           {/* Subtext */}
           <p className="text-sm sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8 sm:mb-10 text-slate-500 dark:text-slate-400 px-2">
-            Immersive train tracking, live route mapping, delay analytics, elevation profiles, and smart geographic companion for Indian Railways.
+            Immersive live tracking, journey planning, delay predictions, station departure boards, and conversational AI assistance for Indian Railways.
           </p>
 
           {/* Search */}
-          <div className="max-w-2xl mx-auto mb-8 sm:mb-10">
+          <div className="max-w-2xl mx-auto mb-6 sm:mb-8">
             <SearchInput onSelectTrain={handleSelectTrain} autoFocus />
+          </div>
+
+          {/* Quick Action Pills: Journey Planner & AI Assistant */}
+          <div className="flex items-center justify-center gap-2.5 sm:gap-4 flex-wrap mb-8">
+            <Link
+              href="/planner"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-indigo-400 dark:hover:border-indigo-500 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 transition-all hover:shadow-md"
+            >
+              <Compass className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <span>Journey Planner</span>
+            </Link>
+            <Link
+              href="/profile"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xs hover:border-indigo-400 dark:hover:border-indigo-500 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200 transition-all hover:shadow-md"
+            >
+              <Star className="w-4 h-4 text-amber-500" />
+              <span>My Saved Journeys</span>
+            </Link>
           </div>
 
           {/* Stats Row */}
@@ -88,13 +117,12 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Recents & Favourites */}
-        {(recents.length > 0 || favourites.length > 0) && (
-          <div className="mt-12 sm:mt-20 grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
-            <RecentSearches recents={recents} onClear={handleClearRecents} onRemove={handleRemoveRecent} />
-            <FavouriteTrains favourites={favourites} onRemove={handleRemoveFavourite} />
-          </div>
-        )}
+        {/* Recents, Favourites & Saved Stations */}
+        <div className="mt-12 sm:mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 max-w-6xl mx-auto">
+          <RecentSearches recents={recents} onClear={handleClearRecents} onRemove={handleRemoveRecent} />
+          <FavouriteTrains favourites={favourites} onRemove={handleRemoveFavourite} />
+          <FavouriteStations />
+        </div>
 
         {/* Featured Trains Grid */}
         <div className="mt-12 sm:mt-20">

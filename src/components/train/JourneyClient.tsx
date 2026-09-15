@@ -13,6 +13,8 @@ import { StationTimeline } from '@/components/timeline/StationTimeline';
 import { WeatherCard } from '@/components/weather/WeatherCard';
 import { NearbyPlaces } from '@/components/nearby/NearbyPlaces';
 import { ShareModal } from '@/components/train/ShareModal';
+import { DelayPredictionCard } from '@/components/analytics/DelayPredictionCard';
+import { CoachMap } from '@/components/train/CoachMap';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Train } from '@/types';
 import dynamic from 'next/dynamic';
@@ -111,7 +113,6 @@ export function JourneyClient({ trainId }: { trainId: string }) {
 
   return (
     <div className="mx-auto max-w-[1280px] px-3.5 sm:px-6 lg:px-10 py-4 sm:py-8 space-y-4 sm:space-y-5">
-
       {/* Stale Banner */}
       {isStale && (
         <div className="flex items-center gap-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/60 border border-amber-200/60 dark:border-amber-900/60 px-3.5 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm text-amber-700 dark:text-amber-300">
@@ -135,6 +136,9 @@ export function JourneyClient({ trainId }: { trainId: string }) {
         <CurrentStationCard station={status.currentStation} delayMinutes={status.delayMinutes} />
         <NextStationCard station={status.nextStation} currentDistanceKm={status.progress.distanceCoveredKm} />
       </div>
+
+      {/* AI Delay Forecast Prediction */}
+      <DelayPredictionCard trainNumber={status.train.number} />
 
       {/* Map + Timeline */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-start">
@@ -161,6 +165,9 @@ export function JourneyClient({ trainId }: { trainId: string }) {
         </div>
 
         <NearbyPlaces features={nearbyData} />
+
+        {/* Coach Map & Position */}
+        <CoachMap trainNumber={status.train.number} coachPositionStr={status.train.coachPosition} />
       </div>
 
       <ShareModal isOpen={isShareModalOpen} onClose={() => setIsShareModalOpen(false)} train={status.train} />
