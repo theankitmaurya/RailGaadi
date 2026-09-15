@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import { ClerkProvider } from '@clerk/nextjs';
 import { QueryProvider } from '@/components/providers/QueryProvider';
 import { ThemeProvider } from '@/components/providers/ThemeProvider';
-import { AuthProvider } from '@/components/providers/AuthProvider';
 import { Header } from '@/components/layout/Header';
 import { AIAssistantDrawer } from '@/components/ai/AIAssistantDrawer';
 
@@ -32,18 +32,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} antialiased`} suppressHydrationWarning>
-      <body className="min-h-screen bg-surface-1 text-text-primary flex flex-col font-sans transition-colors duration-300">
-        <ThemeProvider>
-          <AuthProvider>
+    <ClerkProvider>
+      <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable} antialiased`} suppressHydrationWarning>
+        <body className="min-h-screen bg-surface-1 text-text-primary flex flex-col font-sans transition-colors duration-300">
+          <ThemeProvider>
             <QueryProvider>
               <Header />
               <main className="flex-1">{children}</main>
               <AIAssistantDrawer />
             </QueryProvider>
-          </AuthProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

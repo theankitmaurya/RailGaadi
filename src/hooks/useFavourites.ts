@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useAuth } from '@/components/providers/AuthProvider';
+import { useUser } from '@clerk/nextjs';
 import { getSupabaseClient } from '@/lib/supabase';
 import { FavouriteItem } from '@/types';
 
@@ -9,7 +9,7 @@ const LOCAL_TRAINS_KEY = 'rg_favourite_trains';
 const LOCAL_STATIONS_KEY = 'rg_favourite_stations';
 
 export function useFavourites() {
-  const { user } = useAuth();
+  const { user, isLoaded } = useUser();
   const [favouriteTrains, setFavouriteTrains] = useState<string[]>([]);
   const [favouriteStations, setFavouriteStations] = useState<string[]>([]);
   const [favouriteItems, setFavouriteItems] = useState<FavouriteItem[]>([]);
@@ -19,7 +19,7 @@ export function useFavourites() {
   const loadFavourites = useCallback(async () => {
     setIsLoading(true);
 
-    if (user) {
+    if (user && user.id) {
       try {
         const supabase = getSupabaseClient();
         const { data, error } = await supabase
@@ -27,7 +27,7 @@ export function useFavourites() {
           .select('*')
           .eq('user_id', user.id);
 
-        if (!error && data) {
+        if (!error && data && data.length > 0) {
           const trains = data.filter((f) => f.type === 'train').map((f) => f.reference_id);
           const stations = data.filter((f) => f.type === 'station').map((f) => f.reference_id);
 
@@ -68,8 +68,10 @@ export function useFavourites() {
   }, [user]);
 
   useEffect(() => {
-    loadFavourites();
-  }, [loadFavourites]);
+    if (isLoaded) {
+      loadFavourites();
+    }
+  }, [loadFavourites, isLoaded]);
 
   // Toggle Favourite Train
   const toggleFavouriteTrain = async (trainNumber: string, title?: string) => {
@@ -83,7 +85,7 @@ export function useFavourites() {
       localStorage.setItem(LOCAL_TRAINS_KEY, JSON.stringify(updated));
     }
 
-    if (user) {
+    if (user && user.id) {
       const supabase = getSupabaseClient();
       try {
         if (isFav) {
@@ -119,7 +121,7 @@ export function useFavourites() {
       localStorage.setItem(LOCAL_STATIONS_KEY, JSON.stringify(updated));
     }
 
-    if (user) {
+    if (user && user.id) {
       const supabase = getSupabaseClient();
       try {
         if (isFav) {

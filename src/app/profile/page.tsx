@@ -2,9 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/components/providers/AuthProvider';
+import { useUser, SignOutButton, SignInButton } from '@clerk/nextjs';
 import { useFavourites } from '@/hooks/useFavourites';
-import { AuthModal } from '@/components/auth/AuthModal';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import {
@@ -20,12 +19,11 @@ import {
 } from 'lucide-react';
 
 export default function ProfilePage() {
-  const { user, profile, signOut, isLoading } = useAuth();
+  const { user, isLoaded } = useUser();
   const { favouriteTrains, favouriteStations } = useFavourites();
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'trains' | 'stations' | 'journeys'>('trains');
 
-  if (isLoading) {
+  if (!isLoaded) {
     return (
       <main className="min-h-[85vh] flex items-center justify-center p-6">
         <div className="flex flex-col items-center gap-3">
@@ -36,6 +34,9 @@ export default function ProfilePage() {
     );
   }
 
+  const displayName = user?.fullName || user?.firstName || user?.primaryEmailAddress?.emailAddress?.split('@')[0] || 'Guest Traveler';
+  const email = user?.primaryEmailAddress?.emailAddress || '';
+
   return (
     <main className="min-h-screen pb-20 bg-slate-50/50 dark:bg-[#090c15]">
       {/* Hero Header */}
@@ -43,44 +44,50 @@ export default function ProfilePage() {
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-xl shadow-indigo-500/25">
-                <User className="h-8 w-8" />
-              </div>
+              {user?.imageUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={user.imageUrl}
+                  alt={displayName}
+                  className="h-16 w-16 rounded-2xl object-cover shadow-xl ring-2 ring-indigo-500/30"
+                />
+              ) : (
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-xl shadow-indigo-500/25">
+                  <User className="h-8 w-8" />
+                </div>
+              )}
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-                    {profile?.name || user?.email?.split('@')[0] || 'Guest Traveler'}
+                    {displayName}
                   </h1>
-                  {profile?.role === 'admin' && (
-                    <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
-                      Admin
-                    </span>
-                  )}
                 </div>
                 <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-                  {user?.email || 'Save your favourite trains and stations across all your devices.'}
+                  {email || 'Save your favourite trains and stations across all your devices.'}
                 </p>
               </div>
             </div>
 
             {user ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => signOut()}
-                className="self-start sm:self-center text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 border-rose-200 dark:border-rose-900/50"
-              >
-                <LogOut className="w-3.5 h-3.5 mr-1.5" /> Sign Out
-              </Button>
+              <SignOutButton>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="self-start sm:self-center text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 border-rose-200 dark:border-rose-900/50 cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5 mr-1.5" /> Sign Out
+                </Button>
+              </SignOutButton>
             ) : (
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={() => setIsAuthOpen(true)}
-                className="self-start sm:self-center text-xs"
-              >
-                <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Sign In / Create Account
-              </Button>
+              <SignInButton mode="modal">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  className="self-start sm:self-center text-xs cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Sign In / Create Account
+                </Button>
+              </SignInButton>
             )}
           </div>
 
@@ -104,7 +111,7 @@ export default function ProfilePage() {
             </div>
             <div className="col-span-2 sm:col-span-1 p-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-xs">
               <div className="text-2xl font-black text-emerald-500 dark:text-emerald-400 font-mono">
-                Active
+                {user ? 'Synced' : 'Local'}
               </div>
               <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
                 Cloud Sync Status
@@ -253,8 +260,6 @@ export default function ProfilePage() {
           </Card>
         )}
       </div>
-
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </main>
   );
 }

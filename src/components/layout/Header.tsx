@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { SearchCommand } from '@/components/search/SearchCommand';
 import { useTheme } from '@/components/providers/ThemeProvider';
-import { useAuth } from '@/components/providers/AuthProvider';
-import { AuthModal } from '@/components/auth/AuthModal';
+import { useUser, SignInButton, UserButton } from '@clerk/nextjs';
 import {
   TrainTrack,
   Search,
@@ -13,15 +12,14 @@ import {
   Moon,
   Compass,
   User as UserIcon,
-  Sparkles,
+  Star,
 } from 'lucide-react';
 
 export function Header() {
+  const { isSignedIn, isLoaded } = useUser();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const { user, profile } = useAuth();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -105,34 +103,34 @@ export function Header() {
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
-            {/* User Profile / Auth Button */}
-            {user ? (
-              <Link
-                href="/profile"
-                className="flex items-center gap-2 pl-2 pr-2.5 py-1 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all group"
-              >
-                <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-lg bg-indigo-600 text-white text-xs font-bold font-mono">
-                  {profile?.name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase() || 'U'}
-                </div>
-                <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 hidden sm:inline max-w-[80px] truncate">
-                  {profile?.name || user.email?.split('@')[0]}
-                </span>
-              </Link>
+            {/* Clerk Authentication: Sign In Modal & User Button */}
+            {!isLoaded ? (
+              <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+            ) : isSignedIn ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/profile"
+                  className="flex items-center gap-1 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  title="View Saved Journeys"
+                >
+                  <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
+                  <span className="hidden sm:inline">Saved</span>
+                </Link>
+                <UserButton />
+              </div>
             ) : (
-              <button
-                onClick={() => setIsAuthOpen(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/80 dark:border-indigo-900/60 hover:bg-indigo-600 hover:text-white transition-all duration-200 cursor-pointer"
-              >
-                <UserIcon className="w-3.5 h-3.5" />
-                <span className="hidden xs:inline">Sign In</span>
-              </button>
+              <SignInButton mode="modal">
+                <button className="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/80 dark:border-indigo-900/60 hover:bg-indigo-600 hover:text-white transition-all duration-200 cursor-pointer">
+                  <UserIcon className="w-3.5 h-3.5" />
+                  <span className="hidden xs:inline">Sign In</span>
+                </button>
+              </SignInButton>
             )}
           </div>
         </div>
       </header>
 
       <SearchCommand isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-      <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
     </>
   );
 }
