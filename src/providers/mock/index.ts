@@ -12,13 +12,33 @@ export class MockTrainProvider implements ITrainProvider {
     const q = query.trim().toLowerCase();
     if (!q) return [];
 
-    return MOCK_TRAINS.filter(
+    const matches = MOCK_TRAINS.filter(
       (t) =>
         t.number.toLowerCase().includes(q) ||
         t.name.toLowerCase().includes(q) ||
         t.originName.toLowerCase().includes(q) ||
-        t.destinationName.toLowerCase().includes(q)
+        t.originCode.toLowerCase().includes(q) ||
+        t.destinationName.toLowerCase().includes(q) ||
+        t.destinationCode.toLowerCase().includes(q)
     );
+
+    if (matches.length === 0 && /^\d{4,5}$/.test(q)) {
+      return [{
+        id: q,
+        number: q,
+        name: `Train ${q}`,
+        originStationId: 'ORIG',
+        originCode: 'ORIG',
+        originName: 'Origin Station',
+        destinationStationId: 'DEST',
+        destinationCode: 'DEST',
+        destinationName: 'Destination Station',
+        totalDistanceKm: 1000,
+        durationHours: 14,
+      }];
+    }
+
+    return matches;
   }
 
   async getJourneyStatus(trainId: string): Promise<JourneyStatus> {

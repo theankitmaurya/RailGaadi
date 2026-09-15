@@ -316,6 +316,19 @@ function JourneyPlannerContent() {
                           setShowFromDropdown(true);
                         }}
                         onFocus={() => setShowFromDropdown(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (fromSuggestions.length > 0) {
+                              const code = fromSuggestions[0].code;
+                              setFromCode(code);
+                              setShowFromDropdown(false);
+                              if (toCode) fetchTrains(code, toCode);
+                            } else {
+                              fetchTrains();
+                            }
+                          }
+                        }}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 uppercase"
                       />
                       {fromCode && (
@@ -331,13 +344,17 @@ function JourneyPlannerContent() {
 
                     {/* From Dropdown Suggestions */}
                     {showFromDropdown && fromSuggestions.length > 0 && (
-                      <div className="absolute z-50 left-0 right-0 mt-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-56 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
+                      <div
+                        onMouseDown={(e) => e.preventDefault()}
+                        className="absolute z-50 left-0 right-0 mt-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-56 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800"
+                      >
                         {fromSuggestions.map((stn) => (
                           <div
                             key={stn.code}
                             onClick={() => {
                               setFromCode(stn.code);
                               setShowFromDropdown(false);
+                              if (toCode) fetchTrains(stn.code, toCode);
                             }}
                             className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex items-center justify-between transition-colors"
                           >
@@ -383,6 +400,19 @@ function JourneyPlannerContent() {
                           setShowToDropdown(true);
                         }}
                         onFocus={() => setShowToDropdown(true)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (toSuggestions.length > 0) {
+                              const code = toSuggestions[0].code;
+                              setToCode(code);
+                              setShowToDropdown(false);
+                              if (fromCode) fetchTrains(fromCode, code);
+                            } else {
+                              fetchTrains();
+                            }
+                          }
+                        }}
                         className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 uppercase"
                       />
                       {toCode && (
@@ -398,13 +428,17 @@ function JourneyPlannerContent() {
 
                     {/* To Dropdown Suggestions */}
                     {showToDropdown && toSuggestions.length > 0 && (
-                      <div className="absolute z-50 left-0 right-0 mt-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-56 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800">
+                      <div
+                        onMouseDown={(e) => e.preventDefault()}
+                        className="absolute z-50 left-0 right-0 mt-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-56 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800"
+                      >
                         {toSuggestions.map((stn) => (
                           <div
                             key={stn.code}
                             onClick={() => {
                               setToCode(stn.code);
                               setShowToDropdown(false);
+                              if (fromCode) fetchTrains(fromCode, stn.code);
                             }}
                             className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex items-center justify-between transition-colors"
                           >

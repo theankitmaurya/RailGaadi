@@ -25,12 +25,12 @@ export class RailRadarProvider implements ITrainProvider {
     }
 
     try {
-      const res = await fetch(`${this.baseUrl}/lookup/search/trains?q=${encodeURIComponent(query)}`, {
+      const res = await fetch(`${this.baseUrl}/lookup/search/trains?q=${encodeURIComponent(query)}&limit=15`, {
         headers: this.getHeaders(),
       });
       if (!res.ok) throw new Error(`RailRadar search HTTP error: ${res.status}`);
       const json = await res.json();
-      if (!json.success || !Array.isArray(json.data)) {
+      if (!json.success || !Array.isArray(json.data) || json.data.length === 0) {
         return this.fallbackProvider.searchTrains(query);
       }
 
