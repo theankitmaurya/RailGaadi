@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { PlannerOption } from '@/types';
@@ -70,18 +70,23 @@ export default function JourneyPlannerPage() {
 
 function JourneyPlannerContent() {
   const searchParams = useSearchParams();
+  const urlTrain = searchParams?.get('train') || '';
+  const urlFrom = searchParams?.get('from') || '';
+  const urlTo = searchParams?.get('to') || '';
 
   // Mode: 'route' (Station to Station) or 'train' (Search by Train Number/Name)
-  const [searchMode, setSearchMode] = useState<'route' | 'train'>('route');
+  const [searchMode, setSearchMode] = useState<'route' | 'train'>(
+    urlTrain ? 'train' : 'route'
+  );
 
   // Route fields
-  const [fromCode, setFromCode] = useState(searchParams.get('from') || 'NDLS');
-  const [toCode, setToCode] = useState(searchParams.get('to') || 'AGC');
+  const [fromCode, setFromCode] = useState(urlFrom || 'NDLS');
+  const [toCode, setToCode] = useState(urlTo || 'AGC');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [allDays, setAllDays] = useState(false);
 
   // Train Direct search field
-  const [trainQuery, setTrainQuery] = useState(searchParams.get('train') || '');
+  const [trainQuery, setTrainQuery] = useState(urlTrain || '');
 
   // Preferences & In-page filter
   const [preference, setPreference] = useState<'reliable' | 'fastest' | 'lowest_delay' | 'earliest'>('reliable');
@@ -156,22 +161,28 @@ function JourneyPlannerContent() {
 
   // Fetch route trains or train direct
   const fetchTrains = useCallback(
-    async (overrideFrom?: string, overrideTo?: string, overrideTrain?: string) => {
+    async (
+      overrideFrom?: string,
+      overrideTo?: string,
+      overrideTrain?: string,
+      overrideMode?: 'route' | 'train'
+    ) => {
+      const mode = overrideMode || searchMode;
       setIsLoading(true);
       setHasSearched(true);
 
       try {
         let url = '';
-        if (searchMode === 'train' || overrideTrain) {
-          const q = (overrideTrain || trainQuery).trim();
+        if (mode === 'train' || overrideTrain) {
+          const q = (overrideTrain !== undefined ? overrideTrain : trainQuery).trim();
           if (!q) {
             setIsLoading(false);
             return;
           }
           url = `/api/journeys/plan?train=${encodeURIComponent(q)}&preference=${preference}`;
         } else {
-          const f = (overrideFrom || fromCode).trim();
-          const t = (overrideTo || toCode).trim();
+          const f = (overrideFrom !== undefined ? overrideFrom : fromCode).trim();
+          const t = (overrideTo !== undefined ? overrideTo : toCode).trim();
           if (!f || !t) {
             setIsLoading(false);
             return;
@@ -197,18 +208,24 @@ function JourneyPlannerContent() {
     [searchMode, trainQuery, fromCode, toCode, date, allDays, preference]
   );
 
-  // Initial load
+  // Initial load only - do not trigger on typing
   useEffect(() => {
-    fetchTrains();
-  }, [fetchTrains]);
+    if (urlTrain) {
+      fetchTrains(undefined, undefined, urlTrain, 'train');
+    } else {
+      fetchTrains(urlFrom || 'NDLS', urlTo || 'AGC', undefined, 'route');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSwap = () => {
-    const temp = fromCode;
-    setFromCode(toCode);
-    setToCode(temp);
+    const tempFrom = fromCode;
+    const tempTo = toCode;
+    setFromCode(tempTo);
+    setToCode(tempFrom);
     setShowFromDropdown(false);
     setShowToDropdown(false);
-    fetchTrains(toCode, temp);
+    fetchTrains(tempTo, tempFrom, undefined, 'route');
   };
 
   const handleQuickRoute = (from: string, to: string) => {
@@ -217,25 +234,50 @@ function JourneyPlannerContent() {
     setToCode(to);
     setShowFromDropdown(false);
     setShowToDropdown(false);
-    fetchTrains(from, to);
+    fetchTrains(from, to, undefined, 'route');
   };
 
-  // Filter results by in-page filterText
-  const filteredResults = results.filter((train) => {
-    if (!filterText.trim()) return true;
-    const q = filterText.toLowerCase();
-    return (
-      train.trainNumber.toLowerCase().includes(q) ||
-      train.trainName.toLowerCase().includes(q) ||
-      (train.trainType && train.trainType.toLowerCase().includes(q))
-    );
-  });
+  // Filter and dynamically sort results by in-page filterText and preference
+  const filteredResults = useMemo(() => {
+    const list = results.filter((train) => {
+      if (!filterText.trim()) return true;
+      const q = filterText.toLowerCase();
+      return (
+        train.trainNumber.toLowerCase().includes(q) ||
+        train.trainName.toLowerCase().includes(q) ||
+        (train.trainType && train.trainType.toLowerCase().includes(q))
+      );
+    });
+
+    switch (preference) {
+      case 'fastest':
+        return list.sort((a, b) => a.durationHours - b.durationHours);
+      case 'lowest_delay':
+        return list.sort((a, b) => {
+          const riskWeight = { LOW: 0, MEDIUM: 1, HIGH: 2 };
+          return (
+            riskWeight[a.delayRisk] - riskWeight[b.delayRisk] ||
+            b.reliabilityScore - a.reliabilityScore
+          );
+        });
+      case 'earliest':
+        return list.sort((a, b) =>
+          a.fromStation.departureTime.localeCompare(b.fromStation.departureTime)
+        );
+      case 'reliable':
+      default:
+        return list.sort(
+          (a, b) =>
+            b.reliabilityScore - a.reliabilityScore || a.durationHours - b.durationHours
+        );
+    }
+  }, [results, filterText, preference]);
 
   // Top AI Picks
-  const bestReliable = results.length > 0 ? results[0] : null;
+  const bestReliable = filteredResults.length > 0 ? filteredResults[0] : null;
   const fastestTrain =
-    results.length > 0
-      ? [...results].sort((a, b) => a.durationHours - b.durationHours)[0]
+    filteredResults.length > 0
+      ? [...filteredResults].sort((a, b) => a.durationHours - b.durationHours)[0]
       : null;
 
   return (
@@ -267,7 +309,7 @@ function JourneyPlannerContent() {
                 type="button"
                 onClick={() => {
                   setSearchMode('route');
-                  fetchTrains();
+                  fetchTrains(fromCode, toCode, undefined, 'route');
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   searchMode === 'route'
@@ -282,7 +324,9 @@ function JourneyPlannerContent() {
                 type="button"
                 onClick={() => {
                   setSearchMode('train');
-                  if (trainQuery) fetchTrains(undefined, undefined, trainQuery);
+                  const query = trainQuery.trim() || '12951';
+                  if (!trainQuery.trim()) setTrainQuery('12951');
+                  fetchTrains(undefined, undefined, query, 'train');
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   searchMode === 'train'
@@ -323,9 +367,10 @@ function JourneyPlannerContent() {
                               const code = fromSuggestions[0].code;
                               setFromCode(code);
                               setShowFromDropdown(false);
-                              if (toCode) fetchTrains(code, toCode);
+                              if (toCode) fetchTrains(code, toCode, undefined, 'route');
                             } else {
-                              fetchTrains();
+                              setShowFromDropdown(false);
+                              fetchTrains(fromCode, toCode, undefined, 'route');
                             }
                           }
                         }}
@@ -354,7 +399,7 @@ function JourneyPlannerContent() {
                             onClick={() => {
                               setFromCode(stn.code);
                               setShowFromDropdown(false);
-                              if (toCode) fetchTrains(stn.code, toCode);
+                              if (toCode) fetchTrains(stn.code, toCode, undefined, 'route');
                             }}
                             className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex items-center justify-between transition-colors"
                           >
@@ -407,9 +452,10 @@ function JourneyPlannerContent() {
                               const code = toSuggestions[0].code;
                               setToCode(code);
                               setShowToDropdown(false);
-                              if (fromCode) fetchTrains(fromCode, code);
+                              if (fromCode) fetchTrains(fromCode, code, undefined, 'route');
                             } else {
-                              fetchTrains();
+                              setShowToDropdown(false);
+                              fetchTrains(fromCode, toCode, undefined, 'route');
                             }
                           }
                         }}
@@ -438,7 +484,7 @@ function JourneyPlannerContent() {
                             onClick={() => {
                               setToCode(stn.code);
                               setShowToDropdown(false);
-                              if (fromCode) fetchTrains(fromCode, stn.code);
+                              if (fromCode) fetchTrains(fromCode, stn.code, undefined, 'route');
                             }}
                             className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex items-center justify-between transition-colors"
                           >
@@ -460,7 +506,7 @@ function JourneyPlannerContent() {
                   {/* Search Submit */}
                   <div className="md:col-span-3">
                     <Button
-                      onClick={() => fetchTrains()}
+                      onClick={() => fetchTrains(fromCode, toCode, undefined, 'route')}
                       disabled={isLoading}
                       className="w-full py-2.5 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 cursor-pointer"
                     >
@@ -540,7 +586,10 @@ function JourneyPlannerContent() {
                       value={trainQuery}
                       onChange={(e) => setTrainQuery(e.target.value)}
                       onKeyDown={(e) => {
-                        if (e.key === 'Enter') fetchTrains(undefined, undefined, trainQuery);
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          fetchTrains(undefined, undefined, trainQuery, 'train');
+                        }
                       }}
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
                     />
@@ -555,7 +604,7 @@ function JourneyPlannerContent() {
                     )}
                   </div>
                   <Button
-                    onClick={() => fetchTrains(undefined, undefined, trainQuery)}
+                    onClick={() => fetchTrains(undefined, undefined, trainQuery, 'train')}
                     disabled={isLoading || !trainQuery.trim()}
                     className="px-5 py-2.5 text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer"
                   >
@@ -574,7 +623,7 @@ function JourneyPlannerContent() {
                       key={ex}
                       onClick={() => {
                         setTrainQuery(ex);
-                        fetchTrains(undefined, undefined, ex);
+                        fetchTrains(undefined, undefined, ex, 'train');
                       }}
                       className="text-xs px-2.5 py-0.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-indigo-400 cursor-pointer"
                     >
@@ -763,7 +812,11 @@ function JourneyPlannerContent() {
                 onClick={() => {
                   setFilterText('');
                   setAllDays(true);
-                  fetchTrains();
+                  if (searchMode === 'train') {
+                    fetchTrains(undefined, undefined, trainQuery, 'train');
+                  } else {
+                    fetchTrains(fromCode, toCode, undefined, 'route');
+                  }
                 }}
                 className="mt-4 text-xs cursor-pointer"
               >
@@ -932,4 +985,3 @@ function JourneyPlannerContent() {
     </main>
   );
 }
-
