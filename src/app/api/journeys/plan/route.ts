@@ -4,14 +4,35 @@ import { PlannerService } from '@/services/planner';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const from = searchParams.get('from') || '';
-    const to = searchParams.get('to') || '';
+    const from = searchParams.get('from')?.trim() || '';
+    const to = searchParams.get('to')?.trim() || '';
+    const train = searchParams.get('train')?.trim() || '';
     const date = searchParams.get('date') || undefined;
     const preference = (searchParams.get('preference') as any) || 'reliable';
 
+    // 1. Direct train number or name search
+    if (train) {
+      const results = await PlannerService.findTrainDirect(train);
+      return NextResponse.json({
+        success: true,
+        data: results,
+        meta: { train, count: results.length },
+      });
+    }
+
+    // 2. If user provided a 4-5 digit train number in from without destination
+    if (/^\d{4,5}$/.test(from) && (!to || to.toLowerCase() === 'any')) {
+      const results = await PlannerService.findTrainDirect(from);
+      return NextResponse.json({
+        success: true,
+        data: results,
+        meta: { train: from, count: results.length },
+      });
+    }
+
     if (!from || !to) {
       return NextResponse.json(
-        { error: { code: 'MISSING_PARAMS', message: 'Both "from" and "to" station codes are required.' } },
+        { error: { code: 'MISSING_PARAMS', message: 'Both "from" and "to" station codes or train parameter are required.' } },
         { status: 400 }
       );
     }
