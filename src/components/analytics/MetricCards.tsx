@@ -12,7 +12,7 @@ const metrics = (status: JourneyStatus, elevation: number) => [
   {
     label: 'Journey Complete',
     value: `${status.progress.percentage}%`,
-    sub: `${status.progress.distanceCoveredKm.toLocaleString('en-IN')} km covered`,
+    sub: `${Math.round(status.progress.distanceCoveredKm).toLocaleString('en-IN')} km covered`,
     icon: BarChart3,
     bg: 'bg-indigo-50 dark:bg-indigo-950/60',
     fg: 'text-indigo-600 dark:text-indigo-400',
@@ -21,9 +21,9 @@ const metrics = (status: JourneyStatus, elevation: number) => [
   },
   {
     label: 'Distance Covered',
-    value: `${status.progress.distanceCoveredKm.toLocaleString('en-IN')}`,
+    value: `${Math.round(status.progress.distanceCoveredKm).toLocaleString('en-IN')}`,
     unit: 'km',
-    sub: `${status.progress.distanceRemainingKm.toLocaleString('en-IN')} km remaining`,
+    sub: `${Math.round(status.progress.distanceRemainingKm).toLocaleString('en-IN')} km remaining`,
     icon: Navigation2,
     bg: 'bg-blue-50 dark:bg-blue-950/60',
     fg: 'text-blue-600 dark:text-blue-400',

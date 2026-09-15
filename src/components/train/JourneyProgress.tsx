@@ -17,8 +17,8 @@ export function JourneyProgress({ progress, train }: JourneyProgressProps) {
         <div>
           <div className="label-section mb-0.5">Journey Progress</div>
           <div className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 mt-0.5">
-            <span className="font-mono font-semibold text-slate-600 dark:text-slate-300">{progress.distanceCoveredKm.toLocaleString('en-IN')}</span> km of{' '}
-            <span className="font-mono font-semibold text-slate-600 dark:text-slate-300">{train.totalDistanceKm.toLocaleString('en-IN')}</span> km
+            <span className="font-mono font-semibold text-slate-600 dark:text-slate-300">{Math.round(progress.distanceCoveredKm).toLocaleString('en-IN')}</span> km of{' '}
+            <span className="font-mono font-semibold text-slate-600 dark:text-slate-300">{Math.round(train.totalDistanceKm).toLocaleString('en-IN')}</span> km
           </div>
         </div>
         <div className="text-right">
@@ -46,7 +46,7 @@ export function JourneyProgress({ progress, train }: JourneyProgressProps) {
           <div className="w-2 h-2 rounded-full bg-indigo-500 flex-shrink-0" />
           <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 truncate max-w-[90px] sm:max-w-[140px]">{train.originName}</span>
         </div>
-        <div className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 font-mono flex-shrink-0">{progress.distanceRemainingKm.toLocaleString('en-IN')} km left</div>
+        <div className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 font-mono flex-shrink-0">{Math.round(progress.distanceRemainingKm).toLocaleString('en-IN')} km left</div>
         <div className="flex items-center gap-1.5 min-w-0 justify-end">
           <span className="text-xs font-semibold text-slate-600 dark:text-slate-300 truncate max-w-[90px] sm:max-w-[140px] text-right">{train.destinationName}</span>
           <div className="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700 flex-shrink-0" />

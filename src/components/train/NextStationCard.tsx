@@ -43,7 +43,7 @@ export function NextStationCard({ station, currentDistanceKm = 0 }: NextStationC
         <div>
           <div className="text-slate-400 dark:text-slate-500 mb-0.5">Distance</div>
           <div className="font-black text-indigo-600 dark:text-indigo-400 text-sm">
-            {distanceToNext > 0 ? `${distanceToNext} km` : 'Approaching'}
+            {distanceToNext > 0 ? `${Math.round(distanceToNext)} km` : 'Approaching'}
           </div>
         </div>
       </div>

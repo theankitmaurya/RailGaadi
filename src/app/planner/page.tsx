@@ -796,7 +796,7 @@ function JourneyPlannerContent() {
                         {train.trainName}
                       </h3>
                       <div className="text-xs text-slate-400 mt-0.5">
-                        Distance: {train.distanceKm} km · {train.fromStation.name} → {train.toStation.name}
+                        Distance: {Math.round(train.distanceKm)} km · {train.fromStation.name} → {train.toStation.name}
                       </div>
                     </div>
 

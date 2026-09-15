@@ -80,7 +80,7 @@ export function StationTimeline({ stations }: StationTimelineProps) {
                       <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full">DESTINATION</span>
                     )}
                   </div>
-                  <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 font-mono">{s.distanceFromOriginKm} km</div>
+                  <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 font-mono">{Math.round(s.distanceFromOriginKm)} km</div>
                 </div>
 
                 <div className="text-right flex-shrink-0">

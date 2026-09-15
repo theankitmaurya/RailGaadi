@@ -85,7 +85,7 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
                 <div className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 mt-0.5 truncate">{train.originName} → {train.destinationName}</div>
               </div>
               <div className="text-right flex-shrink-0">
-                <div className="text-[11px] sm:text-xs font-mono text-slate-400 dark:text-slate-500">{train.totalDistanceKm.toLocaleString('en-IN')} km</div>
+                <div className="text-[11px] sm:text-xs font-mono text-slate-400 dark:text-slate-500">{Math.round(train.totalDistanceKm).toLocaleString('en-IN')} km</div>
                 <div className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500">{train.durationHours}h</div>
               </div>
             </Link>

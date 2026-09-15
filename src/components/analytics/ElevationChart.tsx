@@ -46,7 +46,7 @@ export function ElevationChart({ elevationData }: ElevationChartProps) {
                 <stop offset="95%" stopColor="#10b981" stopOpacity={0.0} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="distanceKm" tickFormatter={(val) => `${val}km`} stroke="#94a3b8" fontSize={10} />
+            <XAxis dataKey="distanceKm" tickFormatter={(val) => `${Math.round(val)}km`} stroke="#94a3b8" fontSize={10} />
             <YAxis stroke="#94a3b8" fontSize={10} tickFormatter={(val) => `${val}m`} />
             <Tooltip
               content={({ active, payload }) => {
@@ -54,7 +54,7 @@ export function ElevationChart({ elevationData }: ElevationChartProps) {
                   const data = payload[0].payload;
                   return (
                     <div className="bg-slate-900 text-white text-xs p-2 rounded-xl shadow-xl">
-                      <p className="font-bold">{data.stationName || `${data.distanceKm} km`}</p>
+                      <p className="font-bold">{data.stationName || `${Math.round(data.distanceKm)} km`}</p>
                       <p className="text-emerald-400">{data.elevationMeters} m elevation</p>
                     </div>
                   );

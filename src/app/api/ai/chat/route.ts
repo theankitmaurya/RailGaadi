@@ -81,7 +81,7 @@ Current Location: ${liveStatusData.currentStation?.station.name || 'En route'} (
 Next Halt: ${liveStatusData.nextStation?.station.name || 'Destination'}
 Current Delay: ${liveStatusData.delayMinutes} minutes (${liveStatusData.state})
 Speed: ${liveStatusData.speedKph || 0} km/h
-Distance Covered: ${liveStatusData.progress.distanceCoveredKm} km (${liveStatusData.progress.percentage}% completed)` : 'No single train selected yet.'}
+Distance Covered: ${Math.round(liveStatusData.progress.distanceCoveredKm)} km (${liveStatusData.progress.percentage}% completed)` : 'No single train selected yet.'}
 
 ${weatherData ? `Route Weather: Current temp is ${weatherData.current?.temperatureC || 28}°C (${weatherData.current?.condition || 'Clear'}) at ${weatherData.current?.locationName || 'route'}.` : ''}
 
@@ -109,7 +109,7 @@ Instructions:
           `* **Current Position**: Near **${liveStatusData.currentStation?.station.name || 'En route'}**\n` +
           `* **Next Station**: **${liveStatusData.nextStation?.station.name || liveStatusData.train.destinationName}**\n` +
           `* **Running Status**: **${liveStatusData.delayMinutes > 0 ? `+${liveStatusData.delayMinutes} min delay` : 'Running on time'}** (${liveStatusData.state})\n` +
-          `* **Journey Progress**: ${liveStatusData.progress.percentage}% completed (${liveStatusData.progress.distanceRemainingKm} km remaining)`;
+          `* **Journey Progress**: ${liveStatusData.progress.percentage}% completed (${Math.round(liveStatusData.progress.distanceRemainingKm)} km remaining)`;
       } else if (planData && planData.length > 0) {
         replyText = `### 🧭 Available Trains\n\nFound **${planData.length} trains** on this route:\n\n` +
           planData.slice(0, 3).map(t => `* **${t.trainNumber} ${t.trainName}** — Departs **${t.fromStation.departureTime}**, Duration **${t.durationText}** (Reliability: **${t.reliabilityScore}/100**)`).join('\n');

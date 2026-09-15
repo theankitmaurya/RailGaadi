@@ -232,7 +232,7 @@ export function JourneyMap({ status, route, className }: JourneyMapProps) {
         <div class="hidden group-hover:block absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 pointer-events-none"
           style="background:rgba(10,14,25,0.97); border:1px solid rgba(56,189,248,0.35); border-radius:12px; padding:8px 12px; white-space:nowrap; box-shadow:0 8px 32px rgba(0,0,0,0.6);">
           <div style="color:#fff; font-weight:700; font-size:12px; font-family:inherit;">${s.station.name}</div>
-          <div style="color:#38bdf8; font-size:10px; font-family:monospace; margin-top:2px;">${s.station.code} · ${s.distanceFromOriginKm} km</div>
+          <div style="color:#38bdf8; font-size:10px; font-family:monospace; margin-top:2px;">${s.station.code} · ${Math.round(s.distanceFromOriginKm)} km</div>
         </div>
       `;
 

@@ -44,7 +44,7 @@ export class RailRadarProvider implements ITrainProvider {
         destinationStationId: item.dest || item.destCode || 'DEST',
         destinationCode: item.dest || item.destCode || 'DEST',
         destinationName: item.destName || item.dest || 'Destination',
-        totalDistanceKm: item.distance || 1000,
+        totalDistanceKm: Math.round(item.distance || 1000),
         durationHours: item.durationHours || 16,
       }));
     } catch (err) {
@@ -98,8 +98,8 @@ export class RailRadarProvider implements ITrainProvider {
       
       const nextStop = routeStops.find((s: any, idx: number) => idx > (currentStopIndex !== -1 ? currentStopIndex : lastDepartedIndex) && (s.isHalt ?? true));
 
-      const totalDistance = routeStops[routeStops.length - 1]?.distance || data.train?.distance || 1000;
-      const coveredKm = data.currentLocation?.distanceFromOriginKm ?? (currentStop?.distance || 0);
+      const totalDistance = Math.round(routeStops[routeStops.length - 1]?.distance || data.train?.distance || 1000);
+      const coveredKm = Math.round(data.currentLocation?.distanceFromOriginKm ?? (currentStop?.distance || 0));
 
       const mapStopToRouteStation = (s: any, isCurrent = false): RouteStation => {
         const code = s.stationCode || s.code;
@@ -126,7 +126,7 @@ export class RailRadarProvider implements ITrainProvider {
             ? 'CURRENT'
             : 'UPCOMING',
           platform: s.platform,
-          distanceFromOriginKm: s.distance || 0,
+          distanceFromOriginKm: Math.round(s.distance || 0),
         };
       };
 
@@ -248,7 +248,7 @@ export class RailRadarProvider implements ITrainProvider {
               delayMinutes: s.delayArrival || s.delayDeparture || 0,
               status: stationStatus,
               platform: s.platform,
-              distanceFromOriginKm: s.distance ?? (s.distanceFromOriginKm || 0),
+              distanceFromOriginKm: Math.round(s.distance ?? (s.distanceFromOriginKm || 0)),
             };
           });
         }
@@ -258,7 +258,7 @@ export class RailRadarProvider implements ITrainProvider {
         stations = mockRoute.stations;
       }
 
-      const totalDistance = stations[stations.length - 1]?.distanceFromOriginKm || mockRoute.totalDistanceKm || 1000;
+      const totalDistance = Math.round(stations[stations.length - 1]?.distanceFromOriginKm || mockRoute.totalDistanceKm || 1000);
 
       return {
         trainId: trainId,

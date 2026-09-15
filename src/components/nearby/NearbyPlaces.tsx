@@ -55,7 +55,7 @@ export function NearbyPlaces({ features = [] }: NearbyPlacesProps) {
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="text-sm font-bold text-slate-900 dark:text-slate-100 leading-snug">{feature.name}</span>
                     <span className={`text-[10px] font-bold ${cfg.color} ${cfg.bg} border ${cfg.border} px-2 py-0.5 rounded-full`}>
-                      ~{feature.distanceFromTrainKm} km
+                      ~{Math.round(feature.distanceFromTrainKm)} km
                     </span>
                   </div>
                   <p className="text-[12px] text-slate-500 dark:text-slate-400 mt-1 leading-relaxed line-clamp-2">{feature.description}</p>

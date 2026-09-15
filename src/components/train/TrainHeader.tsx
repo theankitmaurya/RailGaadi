@@ -54,7 +54,7 @@ export function TrainHeader({ status, isFavourite = false, onToggleFavourite, on
             <ArrowRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 flex-shrink-0" />
             <span className="font-semibold text-slate-700 dark:text-slate-200">{train.destinationName}</span>
             <span className="text-slate-200 dark:text-slate-700 hidden xs:inline">·</span>
-            <span className="font-mono text-slate-400 dark:text-slate-500 text-xs">{train.totalDistanceKm.toLocaleString('en-IN')} km</span>
+            <span className="font-mono text-slate-400 dark:text-slate-500 text-xs">{Math.round(train.totalDistanceKm).toLocaleString('en-IN')} km</span>
           </div>
         </div>
 

@@ -185,7 +185,7 @@ export default function HomePage() {
                   {/* Bottom row */}
                   <div className="mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                     <div className="flex items-center gap-2.5 sm:gap-3 text-[11px] sm:text-xs text-slate-400 dark:text-slate-500">
-                      <span className="font-mono">{train.totalDistanceKm.toLocaleString('en-IN')} km</span>
+                      <span className="font-mono">{Math.round(train.totalDistanceKm).toLocaleString('en-IN')} km</span>
                       <span className="w-0.5 h-3 bg-slate-200 dark:bg-slate-800 rounded-full" />
                       <span>{train.durationHours}h</span>
                     </div>
