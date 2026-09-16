@@ -38,9 +38,9 @@ export default function ProfilePage() {
   const email = user?.primaryEmailAddress?.emailAddress || '';
 
   return (
-    <main className="min-h-screen pb-20 bg-slate-50/50 dark:bg-[#090c15]">
+    <main className="min-h-screen pb-20 bg-slate-50/50">
       {/* Hero Header */}
-      <div className="relative border-b border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl">
+      <div className="relative border-b border-slate-200/80 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
@@ -58,11 +58,11 @@ export default function ProfilePage() {
               )}
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                  <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
                     {displayName}
                   </h1>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+                <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
                   {email || 'Save your favourite trains and stations across all your devices.'}
                 </p>
               </div>
@@ -73,7 +73,7 @@ export default function ProfilePage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="self-start sm:self-center text-xs text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 border-rose-200 dark:border-rose-900/50 cursor-pointer"
+                  className="self-start sm:self-center text-xs text-rose-600 hover:bg-rose-50 border-rose-200 cursor-pointer"
                 >
                   <LogOut className="w-3.5 h-3.5 mr-1.5" /> Sign Out
                 </Button>
@@ -93,27 +93,27 @@ export default function ProfilePage() {
 
           {/* Quick Metrics */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mt-8">
-            <div className="p-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="text-2xl font-black text-indigo-600 dark:text-indigo-400 font-mono">
+            <div className="p-4 rounded-xl bg-white border border-slate-200/80 shadow-xs">
+              <div className="text-2xl font-black text-indigo-600 font-mono">
                 {favouriteTrains.length}
               </div>
-              <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
+              <div className="text-xs font-semibold text-slate-500 mt-0.5">
                 Saved Trains
               </div>
             </div>
-            <div className="p-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="text-2xl font-black text-amber-500 dark:text-amber-400 font-mono">
+            <div className="p-4 rounded-xl bg-white border border-slate-200/80 shadow-xs">
+              <div className="text-2xl font-black text-amber-500 font-mono">
                 {favouriteStations.length}
               </div>
-              <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
+              <div className="text-xs font-semibold text-slate-500 mt-0.5">
                 Saved Stations
               </div>
             </div>
-            <div className="col-span-2 sm:col-span-1 p-4 rounded-xl bg-white dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 shadow-xs">
-              <div className="text-2xl font-black text-emerald-500 dark:text-emerald-400 font-mono">
+            <div className="col-span-2 sm:col-span-1 p-4 rounded-xl bg-white border border-slate-200/80 shadow-xs">
+              <div className="text-2xl font-black text-emerald-500 font-mono">
                 {user ? 'Synced' : 'Local'}
               </div>
-              <div className="text-xs font-semibold text-slate-500 dark:text-slate-400 mt-0.5">
+              <div className="text-xs font-semibold text-slate-500 mt-0.5">
                 Cloud Sync Status
               </div>
             </div>
@@ -123,13 +123,13 @@ export default function ProfilePage() {
 
       {/* Tabs & Content */}
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex gap-2 border-b border-slate-200 dark:border-slate-800 pb-3 mb-6">
+        <div className="flex gap-2 border-b border-slate-200 pb-3 mb-6">
           <button
             onClick={() => setActiveTab('trains')}
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'trains'
                 ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
             <TrainTrack className="w-4 h-4" />
@@ -140,7 +140,7 @@ export default function ProfilePage() {
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'stations'
                 ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
             <Building2 className="w-4 h-4" />
@@ -151,7 +151,7 @@ export default function ProfilePage() {
             className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
               activeTab === 'journeys'
                 ? 'bg-indigo-600 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
             <Compass className="w-4 h-4" />
@@ -164,11 +164,11 @@ export default function ProfilePage() {
           <div>
             {favouriteTrains.length === 0 ? (
               <Card className="p-8 text-center">
-                <Star className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-                <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                <Star className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                <h3 className="text-sm font-bold text-slate-800">
                   No Saved Trains Yet
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
+                <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
                   Click the star icon on any train card or journey page to save it here for fast 1-click live status updates.
                 </p>
                 <Link href="/" className="inline-block mt-4">
@@ -183,14 +183,14 @@ export default function ProfilePage() {
                   <Link
                     key={num}
                     href={`/journey/${num}`}
-                    className="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs hover:border-indigo-400 dark:hover:border-indigo-500 transition-all flex items-center justify-between group"
+                    className="p-4 rounded-xl border border-slate-200/80 bg-white shadow-xs hover:border-indigo-400 transition-all flex items-center justify-between group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-mono font-bold text-xs">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 font-mono font-bold text-xs">
                         {num}
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+                        <div className="text-xs font-bold text-slate-900 group-hover:text-indigo-600">
                           Train {num}
                         </div>
                         <div className="text-[11px] text-slate-400 font-mono">Live Tracking</div>
@@ -208,11 +208,11 @@ export default function ProfilePage() {
           <div>
             {favouriteStations.length === 0 ? (
               <Card className="p-8 text-center">
-                <Building2 className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-                <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+                <Building2 className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+                <h3 className="text-sm font-bold text-slate-800">
                   No Saved Stations
                 </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
+                <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
                   Save stations like NDLS, MMCT, LKO to check live departure boards and plan connecting trips.
                 </p>
               </Card>
@@ -222,14 +222,14 @@ export default function ProfilePage() {
                   <Link
                     key={code}
                     href={`/planner?from=${code}`}
-                    className="p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs hover:border-amber-400 dark:hover:border-amber-500 transition-all flex items-center justify-between group"
+                    className="p-4 rounded-xl border border-slate-200/80 bg-white shadow-xs hover:border-amber-400 transition-all flex items-center justify-between group"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 font-mono font-bold text-xs">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600 font-mono font-bold text-xs">
                         {code}
                       </div>
                       <div>
-                        <div className="text-xs font-bold text-slate-900 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-400">
+                        <div className="text-xs font-bold text-slate-900 group-hover:text-amber-600">
                           Station {code}
                         </div>
                         <div className="text-[11px] text-slate-400">Departure Board & Planner</div>
@@ -245,11 +245,11 @@ export default function ProfilePage() {
 
         {activeTab === 'journeys' && (
           <Card className="p-8 text-center">
-            <Calendar className="w-10 h-10 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-            <h3 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+            <Calendar className="w-10 h-10 text-slate-300 mx-auto mb-3" />
+            <h3 className="text-sm font-bold text-slate-800">
               Journey Planner
             </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
+            <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
               Plan and save train itineraries between any two stations with AI reliability scoring.
             </p>
             <Link href="/planner" className="inline-block mt-4">

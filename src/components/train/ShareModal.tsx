@@ -85,8 +85,8 @@ export function ShareModal({ isOpen, onClose, train }: ShareModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Share Live Journey">
       <div className="space-y-4 py-2">
-        <p className="text-sm text-slate-600 dark:text-slate-300">
-          Share this live tracking link for <span className="font-bold text-slate-900 dark:text-slate-100">{train.number} {train.name}</span>. Anyone with the link can view real-time location and station updates.
+        <p className="text-sm text-slate-600">
+          Share this live tracking link for <span className="font-bold text-slate-900">{train.number} {train.name}</span>. Anyone with the link can view real-time location and station updates.
         </p>
 
         <div className="flex items-center gap-2">
@@ -94,7 +94,7 @@ export function ShareModal({ isOpen, onClose, train }: ShareModalProps) {
             type="text"
             readOnly
             value={isLoading ? 'Generating link...' : shareUrl}
-            className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs font-mono text-slate-700 dark:text-slate-200 select-all outline-none"
+            className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-mono text-slate-700 select-all outline-none"
           />
           <Button variant="primary" size="sm" onClick={handleCopy} disabled={isLoading || !shareUrl}>
             {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}

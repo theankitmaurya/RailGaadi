@@ -145,22 +145,22 @@ export function AIAssistantDrawer() {
 
       {/* Drawer Panel */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-full sm:w-[440px] bg-white dark:bg-[#0c0f17] border-l border-slate-200/80 dark:border-slate-800 shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
+        className={`fixed top-0 right-0 z-50 h-full w-full sm:w-[440px] bg-white border-l border-slate-200/80 shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {/* Drawer Header */}
-        <div className="p-4 sm:p-5 border-b border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/60 backdrop-blur-md flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-slate-200/80 bg-slate-50/70 backdrop-blur-md flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-md shadow-indigo-500/25">
               <Bot className="h-5 w-5" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100">
+                <h2 className="text-sm sm:text-base font-bold text-slate-900">
                   RailGaadi AI Assistant
                 </h2>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-200">
                   Gemini
                 </span>
               </div>
@@ -172,7 +172,7 @@ export function AIAssistantDrawer() {
 
           <button
             onClick={() => setIsOpen(false)}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -189,21 +189,21 @@ export function AIAssistantDrawer() {
                 className={`max-w-[88%] rounded-2xl p-3.5 text-xs sm:text-sm leading-relaxed ${
                   msg.role === 'user'
                     ? 'bg-indigo-600 text-white font-medium rounded-br-xs'
-                    : 'bg-slate-100 dark:bg-slate-900/90 text-slate-800 dark:text-slate-200 border border-slate-200/70 dark:border-slate-800 rounded-bl-xs'
+                    : 'bg-slate-100 text-slate-800 border border-slate-200/70 rounded-bl-xs'
                 }`}
               >
                 <div className="whitespace-pre-wrap">{msg.content}</div>
 
                 {/* Structured Insights (if any) */}
                 {msg.insights && msg.insights.length > 0 && (
-                  <div className="mt-3 space-y-2 border-t border-slate-200/60 dark:border-slate-800/80 pt-2.5">
+                  <div className="mt-3 space-y-2 border-t border-slate-200/60 pt-2.5">
                     {msg.insights.map((ins, i) => (
                       <div
                         key={i}
                         className={`p-2.5 rounded-xl text-xs flex items-start gap-2 border ${
                           ins.variant === 'warning'
-                            ? 'bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300'
-                            : 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300'
+                            ? 'bg-amber-50 border-amber-200 text-amber-700'
+                            : 'bg-emerald-50 border-emerald-200 text-emerald-700'
                         }`}
                       >
                         {ins.variant === 'warning' ? (
@@ -227,7 +227,7 @@ export function AIAssistantDrawer() {
           ))}
 
           {isLoading && (
-            <div className="flex items-center gap-2 p-3 rounded-2xl bg-slate-100 dark:bg-slate-900 text-slate-500 text-xs w-fit">
+            <div className="flex items-center gap-2 p-3 rounded-2xl bg-slate-100 text-slate-500 text-xs w-fit">
               <Sparkles className="w-3.5 h-3.5 animate-spin text-indigo-500" />
               <span>Analyzing live railway status...</span>
             </div>
@@ -237,14 +237,14 @@ export function AIAssistantDrawer() {
         </div>
 
         {/* Quick Suggestion Chips */}
-        <div className="px-4 py-2 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40">
+        <div className="px-4 py-2 border-t border-slate-100 bg-slate-50/50">
           <div className="flex gap-1.5 overflow-x-auto pb-1 no-scrollbar">
             {SUGGESTIONS.map((sug) => (
               <button
                 key={sug}
                 onClick={() => sendMessage(sug)}
                 disabled={isLoading}
-                className="text-[11px] font-medium px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-600 dark:text-slate-400 hover:border-indigo-400 dark:hover:border-indigo-500 whitespace-nowrap cursor-pointer transition-colors"
+                className="text-[11px] font-medium px-2.5 py-1 rounded-lg border border-slate-200 bg-white text-slate-600 hover:border-indigo-400 whitespace-nowrap cursor-pointer transition-colors"
               >
                 {sug}
               </button>
@@ -253,7 +253,7 @@ export function AIAssistantDrawer() {
         </div>
 
         {/* Input Bar */}
-        <div className="p-3 sm:p-4 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#0c0f17]">
+        <div className="p-3 sm:p-4 border-t border-slate-200/80 bg-white">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -266,7 +266,7 @@ export function AIAssistantDrawer() {
               placeholder="Ask anything about this journey..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
+              className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
             />
             <button
               type="submit"

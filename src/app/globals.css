@@ -1,10 +1,8 @@
-@import "tailwindcss";
-
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
+﻿@import "tailwindcss";
 
 /* ─────────────────────────────────────
    RAILGAADI DESIGN SYSTEM
-   Premium White × Dark Cartography
+   Premium White × Light Cartography
    ─────────────────────────────────────*/
 
 :root {
@@ -22,7 +20,6 @@
   --surface-1:    #f8fafc;
   --surface-2:    #f1f5f9;
   --surface-3:    #e2e8f0;
-  --surface-dark: #0c0f1a;
 
   /* Text */
   --text-primary:   #0f172a;
@@ -57,21 +54,6 @@
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ─── Dark Mode Tokens ───────────── */
-
-[data-theme="dark"], .dark {
-  --surface-0:    #0f1117;
-  --surface-1:    #090c15;
-  --surface-2:    #161b27;
-  --surface-3:    #1e2535;
-  --text-primary:   #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-tertiary:  #64748b;
-  --text-inverse:   #0f172a;
-
-  color-scheme: dark;
-}
-
 /* ─── Base ────────────────────────── */
 
 html {
@@ -81,7 +63,6 @@ html {
 body {
   background: var(--surface-1);
   color: var(--text-primary);
-  transition: background 0.3s ease, color 0.3s ease;
   font-family: var(--font-sans), 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -94,13 +75,6 @@ body {
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgb(255 255 255 / 0.5);
-}
-
-[data-theme="dark"] .glass, .dark .glass {
-  background: rgb(15 17 23 / 0.85);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  border: 1px solid rgb(255 255 255 / 0.08);
 }
 
 /* ─── Premium Card ───────────────── */
@@ -121,15 +95,6 @@ body {
   transform: translateY(-1px);
 }
 
-[data-theme="dark"] .card-premium, .dark .card-premium {
-  border-color: rgba(255,255,255,0.08);
-}
-
-[data-theme="dark"] .card-premium:hover, .dark .card-premium:hover {
-  border-color: rgba(99,102,241,0.4);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-}
-
 /* ─── Section Labels ─────────────── */
 
 .label-section {
@@ -144,13 +109,6 @@ body {
 
 .gradient-text {
   background: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #818cf8 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-[data-theme="dark"] .gradient-text, .dark .gradient-text {
-  background: linear-gradient(135deg, #818cf8 0%, #a5b4fc 50%, #c7d2fe 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

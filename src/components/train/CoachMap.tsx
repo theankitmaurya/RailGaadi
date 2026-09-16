@@ -74,20 +74,20 @@ export function CoachMap({ trainNumber, coachPositionStr }: CoachMapProps) {
   });
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white/70 dark:bg-slate-900/60 p-5 sm:p-6 backdrop-blur-md shadow-xs">
+    <div className="rounded-2xl border border-slate-200/80 bg-white/70 p-5 sm:p-6 backdrop-blur-md shadow-xs">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600 text-white">
             <TrainTrack className="w-3.5 h-3.5" />
           </div>
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100">
+            <h3 className="text-xs sm:text-sm font-bold text-slate-900">
               Rake & Coach Position
             </h3>
             <span className="text-[10px] text-slate-400">Tap any coach to view berth amenities</span>
           </div>
         </div>
-        <span className="text-[10px] font-mono text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full font-bold">
+        <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full font-bold">
           {coaches.length} Coaches
         </span>
       </div>
@@ -104,13 +104,13 @@ export function CoachMap({ trainNumber, coachPositionStr }: CoachMapProps) {
               onClick={() => setSelectedCoach(c)}
               className={`flex-shrink-0 flex flex-col items-center justify-between h-14 w-12 sm:w-14 rounded-xl border font-mono transition-all cursor-pointer ${
                 isSelected
-                  ? 'border-indigo-600 bg-indigo-50 dark:bg-indigo-950/80 text-indigo-600 dark:text-indigo-400 ring-2 ring-indigo-500/30'
+                  ? 'border-indigo-600 bg-indigo-50 text-indigo-600 ring-2 ring-indigo-500/30'
                   : isEngine
-                  ? 'border-amber-400/80 bg-amber-500 text-white dark:text-slate-950 font-black'
-                  : 'border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 hover:border-slate-400'
+                  ? 'border-amber-400/80 bg-amber-500 text-white font-black'
+                  : 'border-slate-200 bg-white text-slate-700 hover:border-slate-400'
               }`}
             >
-              <span className="text-[9px] text-slate-400 dark:text-slate-500 pt-1 font-sans font-semibold">
+              <span className="text-[9px] text-slate-400 pt-1 font-sans font-semibold">
                 #{i + 1}
               </span>
               <span className="text-xs font-black pb-1.5">{c.name}</span>
@@ -121,16 +121,16 @@ export function CoachMap({ trainNumber, coachPositionStr }: CoachMapProps) {
 
       {/* Selected Coach Inspector */}
       {selectedCoach && (
-        <div className="mt-3 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 flex items-start gap-3">
+        <div className="mt-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-3">
           <Info className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
           <div className="text-xs">
-            <div className="font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <div className="font-bold text-slate-900 flex items-center gap-2">
               <span>Coach {selectedCoach.name}</span>
-              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600">
                 {selectedCoach.label}
               </span>
             </div>
-            <p className="text-slate-500 dark:text-slate-400 mt-1 leading-relaxed">
+            <p className="text-slate-500 mt-1 leading-relaxed">
               {selectedCoach.description}
             </p>
           </div>

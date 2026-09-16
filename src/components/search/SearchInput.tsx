@@ -117,15 +117,15 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
       {/* Search Input Bar */}
       <form onSubmit={handleSubmit} className="relative w-full">
         <div
-          className={`relative flex items-center rounded-2xl border bg-white dark:bg-slate-900/90 transition-all duration-200 shadow-md ${
+          className={`relative flex items-center rounded-2xl border bg-white transition-all duration-200 shadow-md ${
             isFocused
-              ? 'border-indigo-400 dark:border-indigo-500 shadow-lg shadow-indigo-500/10 ring-4 ring-indigo-500/20'
-              : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+              ? 'border-indigo-400 shadow-lg shadow-indigo-500/10 ring-4 ring-indigo-500/20'
+              : 'border-slate-200 hover:border-slate-300'
           }`}
         >
           <Search
             className={`absolute left-3.5 sm:left-4 w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 transition-colors duration-200 ${
-              isFocused ? 'text-indigo-500 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500'
+              isFocused ? 'text-indigo-500' : 'text-slate-400'
             }`}
           />
 
@@ -145,7 +145,7 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
             }}
             placeholder="Search train (12951, Rajdhani) or station (NDLS, Delhi)..."
             autoFocus={autoFocus}
-            className="w-full bg-transparent py-3.5 sm:py-4 pl-10 sm:pl-12 pr-24 sm:pr-28 text-sm sm:text-base text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none font-medium"
+            className="w-full bg-transparent py-3.5 sm:py-4 pl-10 sm:pl-12 pr-24 sm:pr-28 text-sm sm:text-base text-slate-900 placeholder:text-slate-400 outline-none font-medium"
           />
 
           {/* Right Controls: Clear & Action Button */}
@@ -158,7 +158,7 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
                   setTrainResults([]);
                   setStationResults([]);
                 }}
-                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                className="p-1 rounded-lg text-slate-400 hover:text-slate-600 transition-colors"
                 title="Clear search"
               >
                 <X className="w-4 h-4" />
@@ -186,35 +186,35 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
       {showDropdown && (
         <div
           onMouseDown={(e) => e.preventDefault()}
-          className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2 shadow-2xl overflow-hidden max-h-[65vh] overflow-y-auto"
+          className="absolute top-full left-0 right-0 z-50 mt-2 rounded-2xl border border-slate-200 bg-white p-2 shadow-2xl overflow-hidden max-h-[65vh] overflow-y-auto"
         >
           {/* Direct 4-5 digit train quick shortcut */}
           {isDirectNumber && (
             <div
               onClick={() => handleSubmit()}
-              className="mb-2 p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-indigo-50 to-violet-50 dark:from-indigo-950/70 dark:to-violet-950/70 border border-indigo-200 dark:border-indigo-800/60 cursor-pointer flex items-center justify-between group hover:border-indigo-400 transition-all"
+              className="mb-2 p-2.5 sm:p-3 rounded-xl bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200 cursor-pointer flex items-center justify-between group hover:border-indigo-400 transition-all"
             >
               <div className="flex items-center gap-2.5">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white font-black text-xs">
                   {query.trim()}
                 </div>
                 <div>
-                  <div className="text-xs sm:text-sm font-bold text-indigo-950 dark:text-indigo-200">
+                  <div className="text-xs sm:text-sm font-bold text-indigo-950">
                     Track Train {query.trim()} Live Telemetry
                   </div>
-                  <div className="text-[11px] text-indigo-600 dark:text-indigo-400">
+                  <div className="text-[11px] text-indigo-600">
                     Press Enter or tap to track live GPS position & halts
                   </div>
                 </div>
               </div>
-              <ArrowRight className="w-4 h-4 text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 text-indigo-600 group-hover:translate-x-1 transition-transform" />
             </div>
           )}
 
           {/* Trains Section */}
           {trainResults.length > 0 && (
             <div className="mb-2">
-              <div className="px-3 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center justify-between">
+              <div className="px-3 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
                 <span>Trains</span>
                 <span>{trainResults.length} match{trainResults.length !== 1 ? 'es' : ''}</span>
               </div>
@@ -222,29 +222,29 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
                 <div
                   key={`${train.id}-${idx}`}
                   onClick={() => handleSelectTrain(train)}
-                  className="flex items-center gap-3 sm:gap-3.5 rounded-xl p-2.5 sm:p-3 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors group cursor-pointer"
+                  className="flex items-center gap-3 sm:gap-3.5 rounded-xl p-2.5 sm:p-3 hover:bg-slate-50 transition-colors group cursor-pointer"
                 >
-                  <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-950 transition-colors flex-shrink-0">
-                    <Train className="w-4 h-4 text-slate-500 dark:text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors" />
+                  <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-xl bg-slate-100 group-hover:bg-indigo-50 transition-colors flex-shrink-0">
+                    <Train className="w-4 h-4 text-slate-500 group-hover:text-indigo-600 transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs sm:text-sm font-black text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                      <span className="font-mono text-xs sm:text-sm font-black text-slate-900 group-hover:text-indigo-600 transition-colors">
                         {train.number}
                       </span>
-                      <span className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 truncate">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-700 truncate">
                         {train.name}
                       </span>
                     </div>
-                    <div className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 mt-0.5 truncate">
+                    <div className="text-[11px] sm:text-xs text-slate-400 mt-0.5 truncate">
                       {train.originName} → {train.destinationName}
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
-                    <div className="text-[11px] sm:text-xs font-mono text-slate-400 dark:text-slate-500">
+                    <div className="text-[11px] sm:text-xs font-mono text-slate-400">
                       {Math.round(train.totalDistanceKm).toLocaleString('en-IN')} km
                     </div>
-                    <div className="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500">
+                    <div className="text-[10px] sm:text-[11px] text-slate-400">
                       {train.durationHours}h
                     </div>
                   </div>
@@ -255,8 +255,8 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
 
           {/* Stations Section */}
           {stationResults.length > 0 && (
-            <div className="mt-1 pt-1 border-t border-slate-100 dark:border-slate-800/80">
-              <div className="px-3 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 flex items-center justify-between">
+            <div className="mt-1 pt-1 border-t border-slate-100">
+              <div className="px-3 py-1.5 text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 flex items-center justify-between">
                 <span>Stations (Live Boards)</span>
                 <span>{stationResults.length} found</span>
               </div>
@@ -264,25 +264,25 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
                 <div
                   key={`${stn.code}-${idx}`}
                   onClick={() => handleSelectStation(stn.code)}
-                  className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors group cursor-pointer"
+                  className="flex items-center gap-3 rounded-xl p-2.5 hover:bg-slate-50 transition-colors group cursor-pointer"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 group-hover:bg-amber-100 dark:group-hover:bg-amber-900/60 transition-colors flex-shrink-0">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-amber-600 group-hover:bg-amber-100 transition-colors flex-shrink-0">
                     <Building2 className="w-4 h-4" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-1.5 py-0.5 rounded-md border border-amber-200 dark:border-amber-900/60">
+                      <span className="font-mono text-xs font-bold text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded-md border border-amber-200">
                         {stn.code}
                       </span>
-                      <span className="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">
+                      <span className="text-xs sm:text-sm font-semibold text-slate-800 truncate">
                         {stn.name}
                       </span>
                     </div>
-                    <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+                    <div className="text-[11px] text-slate-400 mt-0.5">
                       {stn.city} · View Live Departure Board
                     </div>
                   </div>
-                  <ArrowRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600 group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
+                  <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-amber-500 group-hover:translate-x-0.5 transition-all flex-shrink-0" />
                 </div>
               ))}
             </div>
@@ -292,16 +292,16 @@ export function SearchInput({ onSelectTrain, autoFocus = false }: SearchInputPro
           {!isLoading && trainResults.length === 0 && stationResults.length === 0 && !isDirectNumber && (
             <div className="px-4 py-6 text-center">
               <div className="text-2xl mb-2">🔍</div>
-              <p className="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200">
+              <p className="text-xs sm:text-sm font-semibold text-slate-700">
                 No results found for &quot;{query}&quot;
               </p>
-              <p className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 mt-1">
+              <p className="text-[11px] sm:text-xs text-slate-400 mt-1">
                 Try a 5-digit train number (12951), train name (&quot;Rajdhani&quot;), or station (&quot;NDLS&quot;)
               </p>
               <button
                 type="button"
                 onClick={() => handleSubmit()}
-                className="mt-3 px-3 py-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800 text-xs font-semibold hover:bg-indigo-100 transition-colors"
+                className="mt-3 px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-200 text-xs font-semibold hover:bg-indigo-100 transition-colors"
               >
                 Search &quot;{query}&quot; in Journey Planner →
               </button>

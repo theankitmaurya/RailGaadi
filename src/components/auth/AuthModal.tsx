@@ -65,10 +65,10 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-600 to-indigo-700 text-white shadow-lg shadow-indigo-500/25 mb-3">
             <TrainTrack className="h-6 w-6" />
           </div>
-          <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+          <h2 className="text-xl font-bold tracking-tight text-slate-900">
             {mode === 'signin' ? 'Welcome Back to RailGaadi' : 'Join RailGaadi Intelligence'}
           </h2>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1">
             {mode === 'signin'
               ? 'Sign in to access your saved journeys, alerts, and favourites.'
               : 'Save favourite trains, track journeys, and receive live delay alerts.'}
@@ -77,7 +77,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
 
         {/* Error notice */}
         {errorMsg && (
-          <div className="mb-4 flex items-start gap-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 p-3 text-xs text-rose-600 dark:text-rose-300">
+          <div className="mb-4 flex items-start gap-2.5 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-600">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{errorMsg}</span>
           </div>
@@ -87,7 +87,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
         <button
           type="button"
           onClick={() => handleOAuth('google')}
-          className="w-full flex items-center justify-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold py-2.5 px-4 transition-all duration-150 shadow-xs cursor-pointer mb-4"
+          className="w-full flex items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold py-2.5 px-4 transition-all duration-150 shadow-xs cursor-pointer mb-4"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path
@@ -111,18 +111,18 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
         </button>
 
         <div className="relative flex py-2 items-center mb-4">
-          <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
-          <span className="flex-shrink mx-3 text-[11px] font-medium uppercase text-slate-400 dark:text-slate-500">
+          <div className="flex-grow border-t border-slate-200"></div>
+          <span className="flex-shrink mx-3 text-[11px] font-medium uppercase text-slate-400">
             or with email
           </span>
-          <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+          <div className="flex-grow border-t border-slate-200"></div>
         </div>
 
         {/* Email & Password Form */}
         <form onSubmit={handleSubmit} className="space-y-3">
           {mode === 'signup' && (
             <div>
-              <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+              <label className="block text-xs font-semibold text-slate-700 mb-1">
                 Full Name
               </label>
               <div className="relative">
@@ -140,7 +140,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
               Email Address
             </label>
             <div className="relative">
@@ -157,7 +157,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+            <label className="block text-xs font-semibold text-slate-700 mb-1">
               Password
             </label>
             <div className="relative">
@@ -188,7 +188,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
         </form>
 
         {/* Footer switch */}
-        <div className="mt-5 text-center text-xs text-slate-500 dark:text-slate-400">
+        <div className="mt-5 text-center text-xs text-slate-500">
           {mode === 'signin' ? (
             <>
               Don't have an account?{' '}
@@ -198,7 +198,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
                   setMode('signup');
                   setErrorMsg(null);
                 }}
-                className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                className="font-bold text-indigo-600 hover:underline cursor-pointer"
               >
                 Sign up free
               </button>
@@ -212,7 +212,7 @@ export function AuthModal({ isOpen, onClose, initialMode = 'signin' }: AuthModal
                   setMode('signin');
                   setErrorMsg(null);
                 }}
-                className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer"
+                className="font-bold text-indigo-600 hover:underline cursor-pointer"
               >
                 Sign in
               </button>

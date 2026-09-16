@@ -211,8 +211,8 @@ export function PushNotificationBell({ trainNumber, trainName }: PushNotificatio
         onClick={() => setIsOpen(true)}
         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all duration-200 cursor-pointer shadow-xs ${
           isSubscribed
-            ? 'bg-amber-50 dark:bg-amber-950/60 border-amber-300 dark:border-amber-700/60 text-amber-700 dark:text-amber-300'
-            : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-indigo-400 dark:hover:border-indigo-500'
+            ? 'bg-amber-50 border-amber-300 text-amber-700'
+            : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-400'
         }`}
         title={isSubscribed ? 'Alerts active for this train' : 'Set journey delay alerts'}
       >
@@ -231,29 +231,29 @@ export function PushNotificationBell({ trainNumber, trainName }: PushNotificatio
               <BellRing className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
+              <h3 className="text-base font-bold text-slate-900">
                 Live Journey Alerts
               </h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400">
+              <p className="text-xs text-slate-500">
                 Train {trainNumber} · {trainName}
               </p>
             </div>
           </div>
 
-          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-5 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 mb-5 leading-relaxed">
             Receive native Web Push notifications on your device whenever the train experiences sudden delays or approaches halting stations.
           </p>
 
           {statusMsg && (
-            <div className="mb-4 p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 text-xs text-indigo-700 dark:text-indigo-300 flex items-start gap-2">
+            <div className="mb-4 p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-xs text-indigo-700 flex items-start gap-2">
               <Sparkles className="w-4 h-4 shrink-0 mt-0.5" />
               <span>{statusMsg}</span>
             </div>
           )}
 
           {/* Delay Threshold Setting */}
-          <div className="mb-5 p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-            <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-2">
+          <div className="mb-5 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+            <label className="block text-xs font-bold text-slate-700 mb-2">
               Notify me if delay exceeds:
             </label>
             <div className="flex gap-2">
@@ -265,7 +265,7 @@ export function PushNotificationBell({ trainNumber, trainName }: PushNotificatio
                   className={`flex-1 py-1.5 rounded-lg text-xs font-bold font-mono border transition-colors cursor-pointer ${
                     delayThreshold === mins
                       ? 'bg-indigo-600 text-white border-indigo-600'
-                      : 'bg-white dark:bg-slate-950 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-800'
+                      : 'bg-white text-slate-700 border-slate-200'
                   }`}
                 >
                   +{mins} min
@@ -287,7 +287,7 @@ export function PushNotificationBell({ trainNumber, trainName }: PushNotificatio
               </Button>
             ) : (
               <>
-                <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 dark:text-emerald-400 mb-2">
+                <div className="flex items-center gap-2 text-xs font-semibold text-emerald-600 mb-2">
                   <Check className="w-4 h-4" /> Alerts active on this device
                 </div>
                 <Button

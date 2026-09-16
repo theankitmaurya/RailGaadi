@@ -281,9 +281,9 @@ function JourneyPlannerContent() {
       : null;
 
   return (
-    <main className="min-h-screen pb-20 bg-slate-50/50 dark:bg-[#090c15] text-slate-900 dark:text-slate-100">
+    <main className="min-h-screen pb-20 bg-slate-50/50 text-slate-900">
       {/* Hero Header */}
-      <div className="relative border-b border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl">
+      <div className="relative border-b border-slate-200/80 bg-white/70 backdrop-blur-xl">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
             <div className="flex items-center gap-3">
@@ -291,20 +291,20 @@ function JourneyPlannerContent() {
                 <Compass className="h-5 w-5" />
               </div>
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
                   AI Journey Planner
-                  <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                  <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-200">
                     Live Telemetry
                   </span>
                 </h1>
-                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-xs sm:text-sm text-slate-500">
                   Search scheduled trains between any Indian Railways stations or lookup any train directly.
                 </p>
               </div>
             </div>
 
             {/* Mode Switcher Tabs */}
-            <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+            <div className="flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200">
               <button
                 type="button"
                 onClick={() => {
@@ -313,8 +313,8 @@ function JourneyPlannerContent() {
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   searchMode === 'route'
-                    ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                    ? 'bg-white text-indigo-600 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
                 <MapPin className="w-3.5 h-3.5" />
@@ -330,8 +330,8 @@ function JourneyPlannerContent() {
                 }}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                   searchMode === 'train'
-                    ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
+                    ? 'bg-white text-indigo-600 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
                 <TrainIcon className="w-3.5 h-3.5" />
@@ -341,13 +341,13 @@ function JourneyPlannerContent() {
           </div>
 
           {/* Search Form Card */}
-          <div className="mt-4 p-4 sm:p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-sm">
+          <div className="mt-4 p-4 sm:p-6 rounded-2xl border border-slate-200/80 bg-white shadow-sm">
             {searchMode === 'route' ? (
               <div>
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
                   {/* From Station with Dropdown */}
                   <div className="md:col-span-4 relative" ref={fromWrapperRef}>
-                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
                       Origin Station / City
                     </label>
                     <div className="relative">
@@ -374,13 +374,13 @@ function JourneyPlannerContent() {
                             }
                           }
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 uppercase"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 uppercase"
                       />
                       {fromCode && (
                         <button
                           type="button"
                           onClick={() => setFromCode('')}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -391,7 +391,7 @@ function JourneyPlannerContent() {
                     {showFromDropdown && fromSuggestions.length > 0 && (
                       <div
                         onMouseDown={(e) => e.preventDefault()}
-                        className="absolute z-50 left-0 right-0 mt-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-56 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800"
+                        className="absolute z-50 left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl max-h-56 overflow-y-auto divide-y divide-slate-100"
                       >
                         {fromSuggestions.map((stn) => (
                           <div
@@ -401,13 +401,13 @@ function JourneyPlannerContent() {
                               setShowFromDropdown(false);
                               if (toCode) fetchTrains(stn.code, toCode, undefined, 'route');
                             }}
-                            className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex items-center justify-between transition-colors"
+                            className="p-2.5 hover:bg-slate-50 cursor-pointer flex items-center justify-between transition-colors"
                           >
                             <div className="flex items-center gap-2">
-                              <span className="font-mono font-bold text-xs bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-md border border-indigo-200 dark:border-indigo-800">
+                              <span className="font-mono font-bold text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md border border-indigo-200">
                                 {stn.code}
                               </span>
-                              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                              <span className="text-xs font-semibold text-slate-800">
                                 {stn.name}
                               </span>
                             </div>
@@ -424,7 +424,7 @@ function JourneyPlannerContent() {
                       type="button"
                       onClick={handleSwap}
                       title="Swap Origin and Destination"
-                      className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                      className="p-2.5 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 hover:text-indigo-600 hover:bg-slate-100 cursor-pointer transition-colors"
                     >
                       <ArrowLeftRight className="w-4 h-4" />
                     </button>
@@ -432,7 +432,7 @@ function JourneyPlannerContent() {
 
                   {/* To Station with Dropdown */}
                   <div className="md:col-span-4 relative" ref={toWrapperRef}>
-                    <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                    <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
                       Destination Station / City
                     </label>
                     <div className="relative">
@@ -459,13 +459,13 @@ function JourneyPlannerContent() {
                             }
                           }
                         }}
-                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 uppercase"
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500 uppercase"
                       />
                       {toCode && (
                         <button
                           type="button"
                           onClick={() => setToCode('')}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -476,7 +476,7 @@ function JourneyPlannerContent() {
                     {showToDropdown && toSuggestions.length > 0 && (
                       <div
                         onMouseDown={(e) => e.preventDefault()}
-                        className="absolute z-50 left-0 right-0 mt-1.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl max-h-56 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800"
+                        className="absolute z-50 left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl max-h-56 overflow-y-auto divide-y divide-slate-100"
                       >
                         {toSuggestions.map((stn) => (
                           <div
@@ -486,13 +486,13 @@ function JourneyPlannerContent() {
                               setShowToDropdown(false);
                               if (fromCode) fetchTrains(fromCode, stn.code, undefined, 'route');
                             }}
-                            className="p-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer flex items-center justify-between transition-colors"
+                            className="p-2.5 hover:bg-slate-50 cursor-pointer flex items-center justify-between transition-colors"
                           >
                             <div className="flex items-center gap-2">
-                              <span className="font-mono font-bold text-xs bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 px-2 py-0.5 rounded-md border border-indigo-200 dark:border-indigo-800">
+                              <span className="font-mono font-bold text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md border border-indigo-200">
                                 {stn.code}
                               </span>
-                              <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
+                              <span className="text-xs font-semibold text-slate-800">
                                 {stn.name}
                               </span>
                             </div>
@@ -529,13 +529,13 @@ function JourneyPlannerContent() {
                 <div className="mt-3 flex items-center gap-4 flex-wrap text-xs">
                   <div className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-slate-400" />
-                    <span className="text-slate-500 dark:text-slate-400 font-semibold">Travel Date:</span>
+                    <span className="text-slate-500 font-semibold">Travel Date:</span>
                     <input
                       type="date"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
                       disabled={allDays}
-                      className={`px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs font-mono font-semibold ${
+                      className={`px-2.5 py-1 rounded-lg border border-slate-200 bg-slate-50 text-xs font-mono font-semibold ${
                         allDays ? 'opacity-40 cursor-not-allowed' : ''
                       }`}
                     />
@@ -548,14 +548,14 @@ function JourneyPlannerContent() {
                       onChange={(e) => setAllDays(e.target.checked)}
                       className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-3.5 h-3.5 cursor-pointer"
                     />
-                    <span className="font-semibold text-slate-600 dark:text-slate-300">
+                    <span className="font-semibold text-slate-600">
                       Show all scheduled trains on route (Any day)
                     </span>
                   </label>
                 </div>
 
                 {/* Popular Route Chips */}
-                <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center gap-2 flex-wrap">
+                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center gap-2 flex-wrap">
                   <span className="text-[11px] font-semibold text-slate-400">Popular Routes:</span>
                   {POPULAR_ROUTES.map((route) => (
                     <button
@@ -563,8 +563,8 @@ function JourneyPlannerContent() {
                       onClick={() => handleQuickRoute(route.from, route.to)}
                       className={`text-xs px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
                         fromCode.toUpperCase() === route.from && toCode.toUpperCase() === route.to
-                          ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-bold'
-                          : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 text-slate-600 dark:text-slate-400'
+                          ? 'border-indigo-500 bg-indigo-50 text-indigo-600 font-bold'
+                          : 'border-slate-200 hover:border-slate-300 text-slate-600'
                       }`}
                     >
                       {route.label}
@@ -575,7 +575,7 @@ function JourneyPlannerContent() {
             ) : (
               /* Search By Train Direct */
               <div>
-                <label className="block text-xs font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-1.5">
                   Train Number or Train Name
                 </label>
                 <div className="flex gap-2">
@@ -591,13 +591,13 @@ function JourneyPlannerContent() {
                           fetchTrains(undefined, undefined, trainQuery, 'train');
                         }
                       }}
-                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-xs sm:text-sm font-semibold text-slate-900 dark:text-slate-100 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
+                      className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-xs sm:text-sm font-semibold text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-indigo-500"
                     />
                     {trainQuery && (
                       <button
                         type="button"
                         onClick={() => setTrainQuery('')}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                       >
                         <X className="w-3.5 h-3.5" />
                       </button>
@@ -625,7 +625,7 @@ function JourneyPlannerContent() {
                         setTrainQuery(ex);
                         fetchTrains(undefined, undefined, ex, 'train');
                       }}
-                      className="text-xs px-2.5 py-0.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-indigo-400 cursor-pointer"
+                      className="text-xs px-2.5 py-0.5 rounded-lg border border-slate-200 text-slate-600 hover:border-indigo-400 cursor-pointer"
                     >
                       {ex}
                     </button>
@@ -642,13 +642,13 @@ function JourneyPlannerContent() {
         {/* Preference Tabs & Filter Bar */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
               <span>{searchMode === 'train' ? 'Train Matches' : 'Available Trains'}</span>
-              <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 font-mono font-bold text-slate-600 dark:text-slate-400">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-slate-100 font-mono font-bold text-slate-600">
                 {filteredResults.length} {filteredResults.length === 1 ? 'train' : 'trains'}
               </span>
             </h2>
-            <p className="text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+            <p className="text-xs text-slate-400 mt-0.5">
               Ranked dynamically by travel duration, historical punctuality, and telemetry delay risk.
             </p>
           </div>
@@ -662,7 +662,7 @@ function JourneyPlannerContent() {
                   placeholder="Filter results..."
                   value={filterText}
                   onChange={(e) => setFilterText(e.target.value)}
-                  className="px-3 py-1.5 pl-8 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs text-slate-800 dark:text-slate-200 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 w-36 sm:w-44"
+                  className="px-3 py-1.5 pl-8 rounded-xl border border-slate-200 bg-white text-xs text-slate-800 focus:outline-hidden focus:ring-1 focus:ring-indigo-500 w-36 sm:w-44"
                 />
                 <Filter className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
                 {filterText && (
@@ -678,13 +678,13 @@ function JourneyPlannerContent() {
             )}
 
             {/* Sorting Tabs */}
-            <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 overflow-x-auto">
+            <div className="flex items-center gap-1 p-1 rounded-xl bg-slate-100 border border-slate-200/80 overflow-x-auto">
               <button
                 onClick={() => setPreference('reliable')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                   preference === 'reliable'
-                    ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    ? 'bg-white text-indigo-600 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 <ShieldCheck className="w-3.5 h-3.5" /> Most Reliable
@@ -693,8 +693,8 @@ function JourneyPlannerContent() {
                 onClick={() => setPreference('fastest')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                   preference === 'fastest'
-                    ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    ? 'bg-white text-indigo-600 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 <Zap className="w-3.5 h-3.5" /> Fastest
@@ -703,8 +703,8 @@ function JourneyPlannerContent() {
                 onClick={() => setPreference('lowest_delay')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                   preference === 'lowest_delay'
-                    ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    ? 'bg-white text-indigo-600 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 <TrendingDown className="w-3.5 h-3.5" /> Low Delay
@@ -713,8 +713,8 @@ function JourneyPlannerContent() {
                 onClick={() => setPreference('earliest')}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
                   preference === 'earliest'
-                    ? 'bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-xs'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    ? 'bg-white text-indigo-600 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
                 <Clock className="w-3.5 h-3.5" /> Earliest
@@ -725,52 +725,52 @@ function JourneyPlannerContent() {
 
         {/* AI Route Intelligence Card (When results are available) */}
         {!isLoading && results.length > 0 && bestReliable && (
-          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50 dark:from-indigo-950/40 dark:via-purple-950/30 dark:to-blue-950/40 border border-indigo-200/80 dark:border-indigo-800/60 shadow-xs">
+          <div className="mb-6 p-4 rounded-2xl bg-gradient-to-r from-indigo-50 via-purple-50 to-blue-50 border border-indigo-200/80 shadow-xs">
             <div className="flex items-start gap-3">
               <div className="p-2 rounded-xl bg-indigo-600 text-white shrink-0 mt-0.5">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-xs sm:text-sm font-bold text-indigo-950 dark:text-indigo-200">
+                  <h3 className="text-xs sm:text-sm font-bold text-indigo-950">
                     AI Journey Intelligence
                   </h3>
-                  <span className="text-[10px] bg-indigo-100 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 font-semibold px-2 py-0.5 rounded-full">
+                  <span className="text-[10px] bg-indigo-100 text-indigo-700 font-semibold px-2 py-0.5 rounded-full">
                     Route Analysis
                   </span>
                 </div>
                 <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-                  <div className="p-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-indigo-100 dark:border-indigo-900">
-                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">
+                  <div className="p-2.5 rounded-xl bg-white/80 border border-indigo-100">
+                    <span className="text-[11px] font-semibold text-slate-500 block">
                       🌟 Top Recommended Train
                     </span>
-                    <span className="font-bold text-slate-900 dark:text-slate-100">
+                    <span className="font-bold text-slate-900">
                       {bestReliable.trainName} ({bestReliable.trainNumber})
                     </span>
-                    <div className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
+                    <div className="text-[11px] text-emerald-600 font-semibold mt-0.5">
                       {bestReliable.reliabilityScore}% reliability score
                     </div>
                   </div>
 
                   {fastestTrain && (
-                    <div className="p-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-indigo-100 dark:border-indigo-900">
-                      <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">
+                    <div className="p-2.5 rounded-xl bg-white/80 border border-indigo-100">
+                      <span className="text-[11px] font-semibold text-slate-500 block">
                         ⚡ Fastest Option
                       </span>
-                      <span className="font-bold text-slate-900 dark:text-slate-100">
+                      <span className="font-bold text-slate-900">
                         {fastestTrain.trainName}
                       </span>
-                      <div className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold mt-0.5">
+                      <div className="text-[11px] text-indigo-600 font-semibold mt-0.5">
                         Duration: {fastestTrain.durationText}
                       </div>
                     </div>
                   )}
 
-                  <div className="p-2.5 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-indigo-100 dark:border-indigo-900 sm:col-span-2 md:col-span-1">
-                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 block">
+                  <div className="p-2.5 rounded-xl bg-white/80 border border-indigo-100 sm:col-span-2 md:col-span-1">
+                    <span className="text-[11px] font-semibold text-slate-500 block">
                       🛡️ Punctuality Tip
                     </span>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-300 mt-0.5">
+                    <p className="text-[11px] text-slate-600 mt-0.5">
                       Choose morning departures before 09:00 for the lowest secondary delay risk on this corridor.
                     </p>
                   </div>
@@ -786,17 +786,17 @@ function JourneyPlannerContent() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-40 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 animate-pulse"
+                className="h-40 rounded-2xl bg-white border border-slate-200 animate-pulse"
               />
             ))}
           </div>
         ) : filteredResults.length === 0 ? (
           <Card className="p-12 text-center">
-            <Compass className="w-12 h-12 text-slate-300 dark:text-slate-600 mx-auto mb-3" />
-            <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">
+            <Compass className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+            <h3 className="text-base font-bold text-slate-800">
               {hasSearched ? 'No Direct Trains Found' : 'Search Trains'}
             </h3>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-md mx-auto">
+            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-md mx-auto">
               {hasSearched
                 ? filterText
                   ? `No trains matching "${filterText}". Try clearing your filter.`
@@ -836,21 +836,21 @@ function JourneyPlannerContent() {
                   key={`${train.trainNumber}-${train.fromStation.code}-${idx}`}
                   className={`p-5 rounded-2xl border transition-all relative ${
                     isBest
-                      ? 'bg-white dark:bg-slate-900 border-indigo-400/80 dark:border-indigo-600/60 shadow-md shadow-indigo-500/5 ring-1 ring-indigo-400/30'
-                      : 'bg-white dark:bg-slate-900 border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700'
+                      ? 'bg-white border-indigo-400/80 shadow-md shadow-indigo-500/5 ring-1 ring-indigo-400/30'
+                      : 'bg-white border-slate-200/80 hover:border-slate-300'
                   }`}
                 >
                   {/* Top Badge Row */}
                   <div className="flex items-center justify-between gap-3 mb-3">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-black px-2.5 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
+                      <span className="font-mono text-xs font-black px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-900">
                         {train.trainNumber}
                       </span>
-                      <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">
+                      <span className="text-[11px] font-semibold text-slate-500">
                         {train.trainType || 'Express'}
                       </span>
                       {isBest && (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 border border-amber-300/60 dark:border-amber-700/60 px-2 py-0.5 rounded-full">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-extrabold text-amber-600 bg-amber-50 border border-amber-300/60 px-2 py-0.5 rounded-full">
                           <Award className="w-3 h-3" /> BEST OPTION
                         </span>
                       )}
@@ -861,10 +861,10 @@ function JourneyPlannerContent() {
                       <span
                         className={`text-[11px] font-bold px-2 py-0.5 rounded-full border ${
                           train.delayRisk === 'LOW'
-                            ? 'bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800'
+                            ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
                             : train.delayRisk === 'MEDIUM'
-                            ? 'bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800'
-                            : 'bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-800'
+                            ? 'bg-amber-50 text-amber-600 border-amber-200'
+                            : 'bg-rose-50 text-rose-600 border-rose-200'
                         }`}
                       >
                         {train.delayRisk === 'LOW'
@@ -879,7 +879,7 @@ function JourneyPlannerContent() {
                   {/* Middle Row: Train Name + Journey Times */}
                   <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center mb-4">
                     <div className="sm:col-span-5">
-                      <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 leading-snug">
+                      <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
                         {train.trainName}
                       </h3>
                       <div className="text-xs text-slate-400 mt-0.5">
@@ -889,7 +889,7 @@ function JourneyPlannerContent() {
 
                     <div className="sm:col-span-4 flex items-center gap-3">
                       <div>
-                        <div className="text-sm sm:text-base font-bold font-mono text-slate-900 dark:text-slate-100">
+                        <div className="text-sm sm:text-base font-bold font-mono text-slate-900">
                           {train.fromStation.departureTime}
                         </div>
                         <div className="text-[11px] font-mono text-slate-400">
@@ -901,13 +901,13 @@ function JourneyPlannerContent() {
                         <div className="text-[10px] font-bold text-slate-400 mb-0.5">
                           {train.durationText}
                         </div>
-                        <div className="w-full h-0.5 bg-slate-200 dark:bg-slate-700 relative">
+                        <div className="w-full h-0.5 bg-slate-200 relative">
                           <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-indigo-500" />
                         </div>
                       </div>
 
                       <div>
-                        <div className="text-sm sm:text-base font-bold font-mono text-slate-900 dark:text-slate-100">
+                        <div className="text-sm sm:text-base font-bold font-mono text-slate-900">
                           {train.toStation.arrivalTime}
                         </div>
                         <div className="text-[11px] font-mono text-slate-400">
@@ -919,19 +919,19 @@ function JourneyPlannerContent() {
                     {/* Reliability Gauge Score (FR-08) */}
                     <div className="sm:col-span-3 flex items-center sm:justify-end gap-3">
                       <div className="text-right">
-                        <div className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                        <div className="text-xs font-bold text-slate-700">
                           Reliability
                         </div>
                         <div className="text-[10px] text-slate-400">On-time Index</div>
                       </div>
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 font-mono font-black text-sm text-indigo-600 dark:text-indigo-400">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 border border-slate-200 font-mono font-black text-sm text-indigo-600">
                         {train.reliabilityScore}
                       </div>
                     </div>
                   </div>
 
                   {/* Bottom Action Row with Dynamic Running Days */}
-                  <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between flex-wrap gap-3">
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between flex-wrap gap-3">
                     {/* Days of Operation Badges */}
                     <div className="flex items-center gap-2">
                       <span className="text-[11px] text-slate-400 font-medium">Runs:</span>
@@ -951,7 +951,7 @@ function JourneyPlannerContent() {
                               className={`w-5 h-5 flex items-center justify-center rounded-md text-[10px] font-mono font-bold transition-colors ${
                                 isActive
                                   ? 'bg-indigo-600 text-white shadow-xs'
-                                  : 'bg-slate-100 dark:bg-slate-800 text-slate-300 dark:text-slate-600'
+                                  : 'bg-slate-100 text-slate-300'
                               }`}
                             >
                               {d.label}
@@ -959,7 +959,7 @@ function JourneyPlannerContent() {
                           );
                         })}
                       </div>
-                      <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 ml-1">
+                      <span className="text-[11px] font-semibold text-slate-500 ml-1">
                         {isDaily
                           ? 'Daily'
                           : runDays.map((d) => d.slice(0, 3).toUpperCase()).join(', ')}

@@ -3,13 +3,10 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { SearchCommand } from '@/components/search/SearchCommand';
-import { useTheme } from '@/components/providers/ThemeProvider';
 import { useUser, SignInButton, UserButton } from '@clerk/nextjs';
 import {
   TrainTrack,
   Search,
-  Sun,
-  Moon,
   Compass,
   User as UserIcon,
   Star,
@@ -19,7 +16,6 @@ export function Header() {
   const { isSignedIn, isLoaded } = useUser();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -43,8 +39,8 @@ export function Header() {
       <header
         className={`sticky top-0 z-40 w-full transition-all duration-300 ${
           scrolled
-            ? 'bg-white/85 dark:bg-[#090c15]/90 backdrop-blur-xl border-b border-slate-200/60 dark:border-slate-800/80 shadow-xs'
-            : 'bg-white/60 dark:bg-[#090c15]/60 backdrop-blur-md border-b border-transparent'
+            ? 'bg-white/85 backdrop-blur-xl border-b border-slate-200/60 shadow-xs'
+            : 'bg-white/60 backdrop-blur-md border-b border-transparent'
         }`}
       >
         <div className="mx-auto flex h-[58px] sm:h-[62px] max-w-[1280px] items-center justify-between px-3.5 sm:px-6 lg:px-10">
@@ -55,10 +51,10 @@ export function Header() {
                 <TrainTrack className="h-4 w-4 sm:h-[18px] sm:w-[18px]" />
               </div>
               <div>
-                <div className="text-sm sm:text-[15px] font-bold tracking-tight leading-tight text-slate-900 dark:text-slate-100">
+                <div className="text-sm sm:text-[15px] font-bold tracking-tight leading-tight text-slate-900">
                   RailGaadi
                 </div>
-                <div className="text-[9px] sm:text-[10px] font-medium text-slate-400 dark:text-slate-500 leading-none tracking-wide hidden xs:block">
+                <div className="text-[9px] sm:text-[10px] font-medium text-slate-400 leading-none tracking-wide hidden xs:block">
                   RAILWAY INTELLIGENCE
                 </div>
               </div>
@@ -68,7 +64,7 @@ export function Header() {
             <nav className="hidden md:flex items-center gap-1">
               <Link
                 href="/planner"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition-colors"
               >
                 <Compass className="w-3.5 h-3.5" />
                 <span>Planner</span>
@@ -82,35 +78,25 @@ export function Header() {
             <button
               onClick={() => setIsSearchOpen(true)}
               aria-label="Search trains"
-              className="group flex items-center gap-2 sm:gap-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 p-2 sm:px-3.5 sm:py-2 text-sm text-slate-400 dark:text-slate-400 transition-all duration-200 hover:border-indigo-300 dark:hover:border-indigo-500/60 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md hover:shadow-indigo-500/10 cursor-pointer"
+              className="group flex items-center gap-2 sm:gap-3 rounded-xl border border-slate-200 bg-slate-50 p-2 sm:px-3.5 sm:py-2 text-sm text-slate-400 transition-all duration-200 hover:border-indigo-300 hover:bg-white hover:shadow-md hover:shadow-indigo-500/10 cursor-pointer"
             >
-              <Search className="h-4 w-4 sm:h-3.5 sm:w-3.5 text-slate-400 dark:text-slate-500 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors" />
-              <span className="hidden sm:inline text-xs sm:text-sm text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200 transition-colors">
+              <Search className="h-4 w-4 sm:h-3.5 sm:w-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
+              <span className="hidden sm:inline text-xs sm:text-sm text-slate-400 group-hover:text-slate-600 transition-colors">
                 Search trains...
               </span>
-              <kbd className="hidden md:inline-flex items-center gap-1 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-2 py-0.5 text-[11px] font-mono font-medium text-slate-400 dark:text-slate-500 shadow-xs">
-                ⌘K
+              <kbd className="hidden md:inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-mono font-medium text-slate-400 shadow-xs">
+                ?K
               </kbd>
-            </button>
-
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={toggleTheme}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-slate-500 dark:text-amber-300 hover:bg-white dark:hover:bg-slate-800 hover:border-indigo-300 dark:hover:border-amber-500/40 hover:text-indigo-600 dark:hover:text-amber-300 cursor-pointer transition-all duration-200"
-            >
-              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
 
             {/* Clerk Authentication: Sign In Modal & User Button */}
             {!isLoaded ? (
-              <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-800 animate-pulse" />
+              <div className="w-8 h-8 rounded-xl bg-slate-100 animate-pulse" />
             ) : isSignedIn ? (
               <div className="flex items-center gap-2">
                 <Link
                   href="/profile"
-                  className="flex items-center gap-1 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                  className="flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-indigo-600 px-2.5 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
                   title="View Saved Journeys"
                 >
                   <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-400" />
@@ -120,7 +106,7 @@ export function Header() {
               </div>
             ) : (
               <SignInButton mode="modal">
-                <button className="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/80 dark:border-indigo-900/60 hover:bg-indigo-600 hover:text-white transition-all duration-200 cursor-pointer">
+                <button className="flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-indigo-50 text-indigo-600 border border-indigo-200/80 hover:bg-indigo-600 hover:text-white transition-all duration-200 cursor-pointer">
                   <UserIcon className="w-3.5 h-3.5" />
                   <span className="hidden xs:inline">Sign In</span>
                 </button>
